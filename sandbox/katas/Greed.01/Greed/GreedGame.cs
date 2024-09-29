@@ -6,13 +6,26 @@ using System.Threading.Tasks;
 
 public class GreedGame
 {
-    private int _score = 0;
-    private List<int> _roll = new List<int>();
+    /*
+    Riesenie sa mi paci a nema ziadne velke chyby, parkrat som si hru pustila a preklikala a funguje spravne :)
+    Nasledujuce komentare a zmeny odo mna su skor len nejake best practices co sa pisania kodu tyka.
+    */
+
+    // Pri type int je defaultna hodnota uz 0, preto ju netreba nastavovat
+    private int _score;
+
+    // V .NET 8 je skvela novinka inicializovania Listu skrz [], mne osobne sa to viac paci ako stary sposob.
+    // Pouzivam to aj v praci, vsade kde sa da (nedavno sme presli na .NET 8 a snazim sa novy kod pisat co najnovsim sposobom)
+    private List<int> _roll = [];
 
     public void RollDice(int numberOfDice)
     {
-        Random randomNumberGenerator = new Random();
-        for (int i = 0; i < numberOfDice; i++)
+        // Neviem, ci ste uz mali na hodinach "var", ale je to zauzity sposob, ako deklarovat lokalne premenne
+        // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/statements/declarations#implicitly-typed-local-variables
+        // Ak nie je jasne pouzitie, daj vediet a vysvetlim blizsie :)
+        // Opravila som to len v tejto metode ako priklad, zvysok zostal povodne
+        var randomNumberGenerator = new Random();
+        for (var i = 0; i < numberOfDice; i++)
         {
             _roll.Add(randomNumberGenerator.Next(1, 7));
         }
@@ -20,14 +33,17 @@ public class GreedGame
         DisplayRolledDice();
     }
 
-    private void DisplayRolledDice()
-    {
-        Console.WriteLine($"You've rolled: {String.Join(", ", _roll)}");
-    }
+    // Ak ma metoda len jeden riadok, zvykne sa pouzivat expression body pre lepsiu citatelnost
+    // https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/statements-expressions-operators/expression-bodied-members
+    // Podobne aj pri metode ShowScore()
+    private void DisplayRolledDice() => Console.WriteLine($"You've rolled: {string.Join(", ", _roll)}");
 
     public void CheckScore()
     {
-        if (_roll.Count() == 6)
+        // Namiesto metody Enumerable.Count() je lepsie pouzit v tomto pripade property Count
+        // Vyberam z odpovede od ChatGPT:
+        // In summary, use Count() for LINQ operations and conditions, and use Count when you simply want the total number of elements in a collection.
+        if (_roll.Count == 6)
         {
             CheckSixOfAKind();
             CheckStraightSix();
@@ -71,6 +87,9 @@ public class GreedGame
     }
     private void CheckStraightSix()
     {
+        // Tu by som napisala tu podmienku jednoduchsie:
+        // if (_roll.Distinct() == 6)
+        // Vieme, ze elementov je 6 a kazdy musi byt iny a to staci, aby to bolo straight six
         List<int> straightSix = new List<int>() { 1, 2, 3, 4, 5, 6 };
         if (_roll.Order().ToList().SequenceEqual(straightSix))
         {
@@ -104,6 +123,9 @@ public class GreedGame
         {
             if (_roll.Count(n => n == i) == 5)
             {
+                // Nie je nutne vytvarat novu premennu scoringNumber, staci rovno pouzit i
+                // Malo by to zmysel, iba ak by sme scoringNumber potrebovali pouzit mimo iteraciu cyklu.
+                // Rovnako pri CheckFourOfAKind()
                 int scoringNumber = i;
                 if (scoringNumber == 1)
                 {
