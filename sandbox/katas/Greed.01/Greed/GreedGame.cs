@@ -49,19 +49,19 @@ public class GreedGame
             CheckStraightSix();
             CheckThreePairs();
         }
-        if (_roll.Count() >= 5)
+        if (_roll.Count >= 5)
         {
             CheckFiveOfAKind();
         }
-        if (_roll.Count() >= 4)
+        if (_roll.Count >= 4)
         {
             CheckFourOfAKind();
         }
-        if (_roll.Count() >= 3)
+        if (_roll.Count >= 3)
         {
             CheckThreeOfAKind();
         }
-        if (_roll.Count() > 0)
+        if (_roll.Count > 0)
         {
             CheckOnes();
             CheckFives();
@@ -90,8 +90,7 @@ public class GreedGame
         // Tu by som napisala tu podmienku jednoduchsie:
         // if (_roll.Distinct() == 6)
         // Vieme, ze elementov je 6 a kazdy musi byt iny a to staci, aby to bolo straight six
-        List<int> straightSix = new List<int>() { 1, 2, 3, 4, 5, 6 };
-        if (_roll.Order().ToList().SequenceEqual(straightSix))
+        if (_roll.Distinct().Count() == 6)
         {
             _score += 1200;
             _roll.Clear();
@@ -126,16 +125,15 @@ public class GreedGame
                 // Nie je nutne vytvarat novu premennu scoringNumber, staci rovno pouzit i
                 // Malo by to zmysel, iba ak by sme scoringNumber potrebovali pouzit mimo iteraciu cyklu.
                 // Rovnako pri CheckFourOfAKind()
-                int scoringNumber = i;
-                if (scoringNumber == 1)
+                if (i == 1)
                 {
                     _score += 4000;
                 }
                 else
                 {
-                    _score += scoringNumber * 100 * 4;
+                    _score += i * 100 * 4;
                 }
-                _roll.RemoveAll(n => n == scoringNumber);
+                _roll.RemoveAll(n => n == i);
                 return;
             }
         }
@@ -146,16 +144,15 @@ public class GreedGame
         {
             if (_roll.Count(n => n == i) == 4)
             {
-                int scoringNumber = i;
-                if (scoringNumber == 1)
+                if (i == 1)
                 {
                     _score += 2000;
                 }
                 else
                 {
-                    _score += scoringNumber * 100 * 2;
+                    _score += i * 100 * 2;
                 }
-                _roll.RemoveAll(n => n == scoringNumber);
+                _roll.RemoveAll(n => n == i);
                 return;
             }
         }
