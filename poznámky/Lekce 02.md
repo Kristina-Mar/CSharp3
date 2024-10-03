@@ -7,7 +7,7 @@
 - 4,29 mld. - max. počet IP adres (32 bit, verze 4), docházejí nám -> postupně probíhá migrace na verzi 6 (128 bit), kde nehrozí, že by adresy došly
 - DNS - Domain Name System - "internetový telefonní seznam"
 - prohlížeče - způsob, kterým komunikujeme s internetem - webové stárnky hledáme podle URL (Uniform Resource Locator)
-- Ctrl + Shift + E - developer tools na webu, taky F12
+- Ctrl + Shift + I - developer tools na webu, taky F12
 - port - jeden z přístupových bodů k serveru (HTTP má port 80)
 - HTTP - HyperText Transfer Protocol
 - pomocí tohoto protokolu posíláme informace ze serveru na server nebo ke klientovi
