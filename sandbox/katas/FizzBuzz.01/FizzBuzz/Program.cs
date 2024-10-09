@@ -1,4 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
+// See https://aka.ms/new-console-template for more information
 FizzBuzz fizzBuzz = new FizzBuzz();
 
 Console.WriteLine("Divisible by 3 and/or 5:");
