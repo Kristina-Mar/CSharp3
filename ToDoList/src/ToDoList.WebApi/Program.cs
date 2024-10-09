@@ -1,7 +1,12 @@
 var builder = WebApplication.CreateBuilder(args);
+{
+    // Configure DI
+    builder.Services.AddControllers();
+}
 var app = builder.Build();
-
-app.MapGet("/", () => "Hello World!");
-app.MapGet("/nazdarSvete", () => "Nazdar světe!");
+{
+    // Configure Middleware (HTTP request pipeline)
+    app.MapControllers();
+}
 
 app.Run();
