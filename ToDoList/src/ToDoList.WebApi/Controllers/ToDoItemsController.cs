@@ -4,38 +4,35 @@ using ToDoList.Domain.DTOs;
 using ToDoList.Domain.Models;
 
 [ApiController]
-[Route("api/[controller]")] // podívá se na název třídy níže a vezme vše z názvu kromě Controller na konci
+[Route("api/[controller]")]
 public class ToDoItemsController : ControllerBase
 {
-    private static List<ToDoItem> items = [];
+    private static readonly List<ToDoItem> items = [];
 
     [HttpPost]
-    public IActionResult Create(ToDoItemCreateRequestDto request) // DTO - Data Transfer Object
+    public IActionResult Create(ToDoItemCreateRequestDto request)
     {
+        //map to Domain object as soon as possible
         var item = request.ToDomain();
+
+        //try to create an item
         try
         {
-            item.ToDoItemId = items.Count == 0 ? 1 : items.Max(i => i.ToDoItemId) + 1;
+            item.ToDoItemId = items.Count == 0 ? 1 : items.Max(o => o.ToDoItemId) + 1;
             items.Add(item);
         }
         catch (Exception ex)
         {
-            return Problem(ex.Message, null, StatusCodes.Status500InternalServerError);
+            return Problem(ex.Message, null, StatusCodes.Status500InternalServerError); //500
         }
-        return CreatedAtAction("Create", item);
+
+        //respond to client
+        return NoContent(); //201 //tato metoda z nějakého důvodu vrací status code No Content 204, zjištujeme proč ;)
     }
 
     [HttpGet]
     public IActionResult Read()
     {
-        try
-        {
-            throw new Exception("Něco se pokazilo!");
-        }
-        catch (Exception ex)
-        {
-            return this.Problem(ex.Message, null, StatusCodes.Status500InternalServerError);
-        }
         return Ok();
     }
 
