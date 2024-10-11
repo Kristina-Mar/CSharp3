@@ -11,7 +11,7 @@ public record class ToDoItemGetResponseDto
     public string Description { get; set; }
     public bool IsCompleted { get; set; }
 
-    public static ToDoItemGetResponseDto ToDomain(ToDoItem item) => new()
+    public static ToDoItemGetResponseDto FromDomain(ToDoItem item) => new()
     {
         ToDoItemId = item.ToDoItemId,
         Name = item.Name,
