@@ -27,30 +27,93 @@ public class ToDoItemsController : ControllerBase
         }
 
         //respond to client
-        return NoContent(); //201 //tato metoda z nějakého důvodu vrací status code No Content 204, zjištujeme proč ;)
+        return CreatedAtAction("Created", item.ToDoItemId, item); //201
     }
 
     [HttpGet]
     public IActionResult Read()
     {
-        return Ok();
+        List<ToDoItemGetResponseDto> itemsDto = [];
+        try
+        {
+            if (items == null)
+            {
+                return NotFound();
+            }
+            foreach (var item in items)
+            {
+                var itemDto = item.ToDto();
+                itemsDto.Add(itemDto);
+            }
+        }
+        catch (Exception ex)
+        {
+            return Problem(ex.Message, null, StatusCodes.Status500InternalServerError); //500
+        }
+
+        return Ok(itemsDto);
     }
 
     [HttpGet("{toDoItemId:int}")]
     public IActionResult ReadById(int toDoItemId)
     {
-        return Ok();
+        ToDoItem item;
+        try
+        {
+            item = items.Find(i => i.ToDoItemId == toDoItemId);
+            if (item is null)
+            {
+                return NotFound();
+            }
+        }
+        catch (Exception ex)
+        {
+            return Problem(ex.Message, null, StatusCodes.Status500InternalServerError); //500
+        }
+
+        return Ok(item.ToDto());
     }
 
     [HttpPut("{toDoItemId:int}")]
     public IActionResult UpdateById(int toDoItemId, [FromBody] ToDoItemUpdateRequestDto request)
     {
-        return Ok();
+        var updatedItem = request.ToDomain();
+        updatedItem.ToDoItemId = toDoItemId;
+        try
+        {
+            int index = items.FindIndex(i => i.ToDoItemId == toDoItemId);
+            if (index == -1)
+            {
+                return NotFound();
+            }
+            items[index] = updatedItem;
+        }
+        catch (Exception ex)
+        {
+            return Problem(ex.Message, null, StatusCodes.Status500InternalServerError); //500
+        }
+
+        return NoContent();
     }
 
     [HttpDelete("{toDoItemId:int}")]
     public IActionResult DeleteById(int toDoItemId)
     {
-        return Ok();
+        ToDoItem itemToDelete;
+        try
+        {
+            itemToDelete = items.Find(i => i.ToDoItemId == toDoItemId);
+            if (itemToDelete is null)
+            {
+                return NotFound();
+            }
+            items.Remove(itemToDelete);
+        }
+        catch (Exception ex)
+        {
+            return Problem(ex.Message, null, StatusCodes.Status500InternalServerError); //500
+        }
+
+        return NoContent();
     }
 }
