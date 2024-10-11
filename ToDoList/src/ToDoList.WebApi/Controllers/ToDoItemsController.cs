@@ -43,7 +43,7 @@ public class ToDoItemsController : ControllerBase
             }
             foreach (var item in items)
             {
-                var itemDto = item.ToDto();
+                var itemDto = ToDoItemGetResponseDto.ToDomain(item);
                 itemsDto.Add(itemDto);
             }
         }
@@ -72,7 +72,7 @@ public class ToDoItemsController : ControllerBase
             return Problem(ex.Message, null, StatusCodes.Status500InternalServerError); //500
         }
 
-        return Ok(item.ToDto());
+        return Ok(ToDoItemGetResponseDto.ToDomain(item));
     }
 
     [HttpPut("{toDoItemId:int}")]
