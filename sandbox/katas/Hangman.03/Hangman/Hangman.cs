@@ -5,7 +5,7 @@ public class Hangman
     private List<string> _wordsToGuess = ["PORCUPINE", "PLATYPUS", "ANTEATER", "CROCODILE", "ARMADILLO", "TAPIR", "MAMMOTH", "PELICAN", "BABOON"];
     private string _wordToGuess = string.Empty;
     public bool GameIsInProgress { get; private set; }
-    public int MaxNumberOfIncorrectGuesses { get; private set; } = 7;
+    public int MaxNumberOfIncorrectGuesses { get; private set; } = 6;
     public char[] UncoveredWord { get; private set; }
     public int NumberOfIncorrectGuesses { get; private set; }
     public List<char> GuessedLetters { get; private set; } = [];
@@ -24,13 +24,13 @@ public class Hangman
 
     public string Guess(char guessedLetter)
     {
-        if (!char.IsLetter(guessedLetter))
+        if (!Regex.IsMatch(guessedLetter.ToString(), @"^[a-zA-Z]+$"))
         {
-            return $"You can only guess letters of the English alphabet! Try again.";
+            return $"You can only guess letters of the English alphabet!";
         }
         if (GuessedLetters.Contains(guessedLetter))
         {
-            return $"You've already guessed {guessedLetter}. {string.Join(" ", UncoveredWord)}, guessed letters: {string.Join(", ", GuessedLetters)}, number of incorrect guesses: {NumberOfIncorrectGuesses}/{MaxNumberOfIncorrectGuesses}";
+            return $"You've already guessed {guessedLetter}.";
         }
 
         GuessedLetters.Add(guessedLetter);
@@ -43,10 +43,10 @@ public class Hangman
                     UncoveredWord[i] = guessedLetter;
                 }
             }
-            return $"Correct guess! {string.Join(" ", UncoveredWord)}, guessed letters: {string.Join(", ", GuessedLetters)}, number of incorrect guesses: {NumberOfIncorrectGuesses}/{MaxNumberOfIncorrectGuesses}";
+            return $"Correct!";
         }
         NumberOfIncorrectGuesses++;
-        return $"Incorrect! {string.Join(" ", UncoveredWord)}, guessed letters: {string.Join(", ", GuessedLetters)}, number of incorrect guesses: {NumberOfIncorrectGuesses}/{MaxNumberOfIncorrectGuesses}";
+        return $"Incorrect!";
     }
 
     public string CheckGameStatus()
@@ -54,13 +54,13 @@ public class Hangman
         if (!UncoveredWord.Contains('_'))
         {
             GameIsInProgress = false;
-            return $"Congratulations, you win!";
+            return $"Congratulations, you win! The word was {_wordToGuess}.";
         }
         if (NumberOfIncorrectGuesses == MaxNumberOfIncorrectGuesses)
         {
             GameIsInProgress = false;
             return $"Game over. You have reached the maximum number of incorrect guesses. The word you were guessing was {_wordToGuess}.";
         }
-        return "Guess again.";
+        return $"{string.Join(" ", UncoveredWord)}, guessed letters: {string.Join(", ", GuessedLetters)}, number of incorrect guesses: {NumberOfIncorrectGuesses}/{MaxNumberOfIncorrectGuesses}. Guess again.";
     }
 }
