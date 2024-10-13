@@ -28,7 +28,7 @@ public class ToDoItemsController : ControllerBase
 
         //respond to client
         //return Created();
-        return CreatedAtAction("Create", item); //201
+        return CreatedAtAction("Create", ToDoItemGetResponseDto.FromDomain(item)); //201
     }
 
     [HttpGet]
