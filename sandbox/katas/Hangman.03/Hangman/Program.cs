@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices;
-
-Console.WriteLine($"Welcome to the game of hangman.");
+﻿Console.WriteLine($"Welcome to the game of hangman.");
 
 while (true)
 {

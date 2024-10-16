@@ -49,7 +49,6 @@ public class ToDoItemsController : ControllerBase
             /*
             Dobre riesenie, slo by napisat aj cez LINQ napriklad takto:
             itemsDto = items.Select(ToDoItemGetResponseDto.FromDomain).ToList();
-            Obecne je lepsie pouzivat LINQ kde sa da, vela z tych funkcii je optimalizovanych a tym padom to ma performance benefity.
             */
             foreach (var item in items)
             {

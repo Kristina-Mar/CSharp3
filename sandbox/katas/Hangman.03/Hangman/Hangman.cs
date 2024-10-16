@@ -1,4 +1,3 @@
-using System.Text.RegularExpressions;
 
 public class Hangman
 {
@@ -24,7 +23,11 @@ public class Hangman
 
     public string Guess(char guessedLetter)
     {
-        if (!Regex.IsMatch(guessedLetter.ToString(), @"^[a-zA-Z]+$"))
+        /*
+        char obsahuje vela statickych metod, na zaklade ktorych je lahko overovat characters (IsNumber, IsWhiteSpace atd.)
+        Pre tento pripad je lepsie pouzit IsLetter, Regex je nakladny a nie je tu nutny
+        */
+        if (!char.IsLetter(guessedLetter))
         {
             return $"You can only guess letters of the English alphabet!";
         }
