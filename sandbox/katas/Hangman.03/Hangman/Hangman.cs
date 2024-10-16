@@ -27,7 +27,9 @@ public class Hangman
         char obsahuje vela statickych metod, na zaklade ktorych je lahko overovat characters (IsNumber, IsWhiteSpace atd.)
         Pre tento pripad je lepsie pouzit IsLetter, Regex je nakladny a nie je tu nutny
         */
-        if (!char.IsLetter(guessedLetter))
+        //if (!char.IsLetter(guessedLetter))
+        // Changed back to Regex because I only want letters of the English alphabet in this version (only English words).
+        if (!Regex.IsMatch(guessedLetter.ToString(), @"^[a-zA-Z]+$"))
         {
             return $"You can only guess letters of the English alphabet!";
         }
