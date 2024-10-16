@@ -28,7 +28,12 @@ public class ToDoItemsController : ControllerBase
 
         //respond to client
         //return Created();
-        return CreatedAtAction("Create", ToDoItemGetResponseDto.FromDomain(item)); //201
+        /*
+        Podla zadania a spravne sa ma vracat CreatedAtAction takto: prvy parameter je cesta, druhy je parameter v tej ceste ReadById (toDoItem), a treti je response body tohto callu.
+        Ukazala som to zle ja v breakout room, nedocitala som si cele zadanie, ale zaroven robila som to automaticky podla toho, co mame v praci a tam to mame zle ako pozeram :D
+        Aspon je vidiet, ze ani moji seniorni kolegovia, co uz pracuju v IT roky, nevedia vzdy vsetko :)
+        */
+        return CreatedAtAction(nameof(ReadById), new { toDoItemId = item.ToDoItemId }, ToDoItemGetResponseDto.FromDomain(item)); //201
     }
 
     [HttpGet]
@@ -41,6 +46,10 @@ public class ToDoItemsController : ControllerBase
             {
                 return NotFound();
             }
+            /*
+            Dobre riesenie, slo by napisat aj cez LINQ napriklad takto:
+            itemsDto = items.Select(ToDoItemGetResponseDto.FromDomain).ToList();
+            */
             foreach (var item in items)
             {
                 var itemDto = ToDoItemGetResponseDto.FromDomain(item);
@@ -58,7 +67,9 @@ public class ToDoItemsController : ControllerBase
     [HttpGet("{toDoItemId:int}")]
     public IActionResult ReadById(int toDoItemId)
     {
-        ToDoItem item;
+        // Editor mi podciarkuje Find s chybou: Converting null literal or possible null value to non-nullable type.
+        // robim teda z item nullable typ.
+        ToDoItem? item;
         try
         {
             item = items.Find(i => i.ToDoItemId == toDoItemId);
@@ -82,7 +93,8 @@ public class ToDoItemsController : ControllerBase
         updatedItem.ToDoItemId = toDoItemId;
         try
         {
-            int index = items.FindIndex(i => i.ToDoItemId == toDoItemId);
+            // editor nasepkava, aby som pouzila radsej var
+            var index = items.FindIndex(i => i.ToDoItemId == toDoItemId);
             if (index == -1)
             {
                 return NotFound();
@@ -100,7 +112,8 @@ public class ToDoItemsController : ControllerBase
     [HttpDelete("{toDoItemId:int}")]
     public IActionResult DeleteById(int toDoItemId)
     {
-        ToDoItem itemToDelete;
+        // podobne ako pri ReadById
+        ToDoItem? itemToDelete;
         try
         {
             itemToDelete = items.Find(i => i.ToDoItemId == toDoItemId);
