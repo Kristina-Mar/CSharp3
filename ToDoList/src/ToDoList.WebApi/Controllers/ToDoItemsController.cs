@@ -66,7 +66,7 @@ public class ToDoItemsController : ControllerBase
     }
 
     [HttpGet("{toDoItemId:int}")]
-    public IActionResult ReadById(int toDoItemId)
+    public ActionResult<ToDoItemGetResponseDto> ReadById(int toDoItemId)
     {
         // Editor mi podciarkuje Find s chybou: Converting null literal or possible null value to non-nullable type.
         // robim teda z item nullable typ.

@@ -24,14 +24,16 @@ public class GetTests
 
         // Act
         var result = controller.Read();
-        var resultResult = result.Result as OkObjectResult;
-        var value = resultResult.Value as IEnumerable<ToDoItemGetResponseDto>;
 
         // Assert
-        Assert.True(resultResult is OkObjectResult);
-        Assert.IsType<OkObjectResult>(resultResult);
+        //Assert.True(result.Result is OkObjectResult);
+        var resultResult = Assert.IsType<OkObjectResult>(result.Result);
+
+        var value = resultResult.Value as IEnumerable<ToDoItemGetResponseDto>;
+
         Assert.NotNull(value);
         Assert.Single(value);
+        Assert.Equal(ToDoItemGetResponseDto.FromDomain(toDoItem), value.ToList()[0]);
     }
 
     [Fact]
@@ -43,10 +45,55 @@ public class GetTests
 
         // Act
         var result = controller.Read();
-        var value = result.Value;
         var resultResult = result.Result;
 
         // Assert
         Assert.IsType<NotFoundResult>(resultResult);
+    }
+
+    [Fact]
+    public void Get_OneItemByID_ReturnsItem()
+    {
+        // Arrange
+        var controller = new ToDoItemsController();
+        var toDoItem = new ToDoItem // only works if items is public
+        {
+            ToDoItemId = 1,
+            Name = "Test name",
+            Description = "Test description",
+            IsCompleted = false
+        };
+        ToDoItemsController.items.Add(toDoItem);
+
+        // Act
+        var result = controller.ReadById(1);
+
+        // Assert
+        var resultResult = Assert.IsType<OkObjectResult>(result.Result);
+        var value = resultResult.Value as ToDoItemGetResponseDto;
+        Assert.NotNull(value);
+        Assert.Equal(ToDoItemGetResponseDto.FromDomain(toDoItem), value);
+    }
+
+    [Fact]
+    public void Get_OneItemByID_ReturnsNotFound()
+    {
+        // Arrange
+        var controller = new ToDoItemsController();
+        ToDoItemsController.items = [];
+        var toDoItem = new ToDoItem // only works if items is public
+        {
+            ToDoItemId = 1,
+            Name = "Test name",
+            Description = "Test description",
+            IsCompleted = false
+        };
+        ToDoItemsController.items.Add(toDoItem);
+
+        // Act
+        var result = controller.ReadById(2);
+
+        // Assert
+        Assert.IsType<NotFoundResult>(result.Result);
     }
 }
