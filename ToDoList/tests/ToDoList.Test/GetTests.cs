@@ -56,6 +56,7 @@ public class GetTests
     {
         // Arrange
         var controller = new ToDoItemsController();
+        ToDoItemsController.items = [];
         var toDoItem = new ToDoItem // only works if items is public
         {
             ToDoItemId = 1,
@@ -80,7 +81,7 @@ public class GetTests
     {
         // Arrange
         var controller = new ToDoItemsController();
-        ToDoItemsController.items = [];
+        ToDoItemsController.items = []; // Making sure the list is empty so we can add one item.
         var toDoItem = new ToDoItem // only works if items is public
         {
             ToDoItemId = 1,
