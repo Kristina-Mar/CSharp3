@@ -111,7 +111,7 @@ public class ToDoItemsController : ControllerBase
     }
 
     [HttpDelete("{toDoItemId:int}")]
-    public IActionResult DeleteById(int toDoItemId)
+    public ActionResult DeleteById(int toDoItemId)
     {
         // podobne ako pri ReadById
         ToDoItem? itemToDelete;
