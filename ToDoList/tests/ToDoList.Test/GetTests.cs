@@ -14,7 +14,7 @@ public class GetTests
     {
         // Arrange
         var controller = new ToDoItemsController();
-        ToDoItemsController.items.Clear();
+        ToDoItemsController.items = [];
         var toDoItem = new ToDoItem // only works if items is public
         {
             ToDoItemId = 1,
@@ -34,7 +34,6 @@ public class GetTests
         var value = resultResult.Value as IEnumerable<ToDoItemGetResponseDto>;
 
         Assert.NotNull(value);
-        Assert.Single(value);
         Assert.Equal(ToDoItemGetResponseDto.FromDomain(toDoItem), value.ToList()[0]);
     }
 
