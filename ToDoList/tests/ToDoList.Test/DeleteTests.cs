@@ -13,7 +13,7 @@ public class DeleteTests
     {
         // Arrange
         var controller = new ToDoItemsController();
-        ToDoItemsController.items = [];
+        ToDoItemsController.items.Clear();
         var toDoItem = new ToDoItem
         {
             ToDoItemId = 1,
@@ -44,7 +44,7 @@ public class DeleteTests
     {
         // Arrange
         var controller = new ToDoItemsController();
-        ToDoItemsController.items = [];
+        ToDoItemsController.items.Clear();
         var toDoItem = new ToDoItem // only works if items is public
         {
             ToDoItemId = 1,

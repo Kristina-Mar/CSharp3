@@ -1,6 +1,7 @@
 
 namespace ToDoList.Test;
 
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.DTOs;
 using ToDoList.Domain.Models;
@@ -13,6 +14,7 @@ public class GetTests
     {
         // Arrange
         var controller = new ToDoItemsController();
+        ToDoItemsController.items.Clear();
         var toDoItem = new ToDoItem // only works if items is public
         {
             ToDoItemId = 1,
@@ -81,7 +83,7 @@ public class GetTests
     {
         // Arrange
         var controller = new ToDoItemsController();
-        ToDoItemsController.items = []; // Making sure the list is empty so we can add one item.
+        ToDoItemsController.items.Clear();
         var toDoItem = new ToDoItem // only works if items is public
         {
             ToDoItemId = 1,
