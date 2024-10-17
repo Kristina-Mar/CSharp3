@@ -7,7 +7,7 @@ using ToDoList.Domain.Models;
 [Route("api/[controller]")]
 public class ToDoItemsController : ControllerBase
 {
-    private static readonly List<ToDoItem> items = [];
+    public static List<ToDoItem> items = [];
 
     [HttpPost]
     public IActionResult Create(ToDoItemCreateRequestDto request)
@@ -37,7 +37,7 @@ public class ToDoItemsController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult Read()
+    public ActionResult<IEnumerable<ToDoItemGetResponseDto>> Read()
     {
         List<ToDoItemGetResponseDto> itemsDto = [];
         try
@@ -50,11 +50,12 @@ public class ToDoItemsController : ControllerBase
             Dobre riesenie, slo by napisat aj cez LINQ napriklad takto:
             itemsDto = items.Select(ToDoItemGetResponseDto.FromDomain).ToList();
             */
-            foreach (var item in items)
+            /*foreach (var item in items)
             {
                 var itemDto = ToDoItemGetResponseDto.FromDomain(item);
                 itemsDto.Add(itemDto);
-            }
+            }*/
+            itemsDto = items.Select(ToDoItemGetResponseDto.FromDomain).ToList();
         }
         catch (Exception ex)
         {
