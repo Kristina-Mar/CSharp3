@@ -37,6 +37,7 @@ public class DeleteTests
         // Assert
         Assert.IsType<NoContentResult>(result);
         Assert.DoesNotContain(controller.items, i => i.ToDoItemId == 2);
+        Assert.Single(controller.items);
     }
 
     [Fact]
@@ -59,5 +60,6 @@ public class DeleteTests
 
         // Assert
         Assert.IsType<NotFoundResult>(result);
+        Assert.Single(controller.items);
     }
 }
