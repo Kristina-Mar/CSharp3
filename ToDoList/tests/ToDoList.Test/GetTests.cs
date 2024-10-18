@@ -98,5 +98,6 @@ public class GetTests
 
         // Assert
         Assert.IsType<NotFoundResult>(result.Result);
+        Assert.DoesNotContain(controller.items, i => i.ToDoItemId == 2);
     }
 }
