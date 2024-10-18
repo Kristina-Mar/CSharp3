@@ -1,8 +1,6 @@
 namespace ToDoList.Test;
 
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
-using ToDoList.Domain.DTOs;
 using ToDoList.Domain.Models;
 using ToDoList.WebApi.Controllers;
 
@@ -13,7 +11,7 @@ public class DeleteTests
     {
         // Arrange
         var controller = new ToDoItemsController();
-        controller.items.Clear();
+        ToDoItemsController.items = [];
         var toDoItem = new ToDoItem
         {
             ToDoItemId = 1,
@@ -28,16 +26,16 @@ public class DeleteTests
             Description = "Test description",
             IsCompleted = false
         };
-        controller.items.Add(toDoItem);
-        controller.items.Add(toDoItem2);
+        ToDoItemsController.items.Add(toDoItem);
+        ToDoItemsController.items.Add(toDoItem2);
 
         // Act
         var result = controller.DeleteById(2);
 
         // Assert
         Assert.IsType<NoContentResult>(result);
-        Assert.DoesNotContain(controller.items, i => i.ToDoItemId == 2);
-        Assert.Single(controller.items);
+        Assert.DoesNotContain(ToDoItemsController.items, i => i.ToDoItemId == 2);
+        Assert.Single(ToDoItemsController.items);
     }
 
     [Fact]
@@ -45,21 +43,22 @@ public class DeleteTests
     {
         // Arrange
         var controller = new ToDoItemsController();
-        controller.items.Clear();
-        var toDoItem = new ToDoItem // only works if items is public
+        ToDoItemsController.items = [];
+        var toDoItem = new ToDoItem
         {
             ToDoItemId = 1,
             Name = "Test name",
             Description = "Test description",
             IsCompleted = false
         };
-        controller.items.Add(toDoItem);
+        ToDoItemsController.items.Add(toDoItem);
 
         // Act
         var result = controller.DeleteById(2);
 
         // Assert
         Assert.IsType<NotFoundResult>(result);
-        Assert.Single(controller.items);
+        Assert.DoesNotContain(ToDoItemsController.items, i => i.ToDoItemId == 2);
+        Assert.Single(ToDoItemsController.items);
     }
 }

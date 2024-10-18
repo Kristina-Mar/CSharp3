@@ -1,11 +1,7 @@
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
+namespace ToDoList.Test;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.DTOs;
-using ToDoList.Domain.Models;
 using ToDoList.WebApi.Controllers;
-
-namespace ToDoList.Test;
 
 public class PostTests
 {
@@ -14,7 +10,7 @@ public class PostTests
     {
         // Arrange
         var controller = new ToDoItemsController();
-        controller.items = [];
+        ToDoItemsController.items = [];
         var toDoItemDto = new ToDoItemCreateRequestDto("New item name", "New item description", false);
 
         // Act
@@ -22,11 +18,10 @@ public class PostTests
 
         // Assert
         var resultResult = Assert.IsType<CreatedAtActionResult>(result).Value;
-
         var newItem = resultResult as ToDoItemGetResponseDto;
-        Assert.NotNull(controller.items.Find(i => i.Name == toDoItemDto.Name));
-        Assert.Single(controller.items);
-        Assert.Equal(controller.items.Max(o => o.ToDoItemId), newItem.ToDoItemId);
+        Assert.NotNull(ToDoItemsController.items.Find(i => i.Name == toDoItemDto.Name));
+        Assert.Single(ToDoItemsController.items);
+        Assert.Equal(ToDoItemsController.items.Max(o => o.ToDoItemId), newItem.ToDoItemId);
         Assert.Equal(toDoItemDto.Name, newItem.Name);
         Assert.Equal(toDoItemDto.Description, newItem.Description);
         Assert.Equal(toDoItemDto.IsCompleted, newItem.IsCompleted);

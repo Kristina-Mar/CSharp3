@@ -1,7 +1,6 @@
 
 namespace ToDoList.Test;
 
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.DTOs;
 using ToDoList.Domain.Models;
@@ -14,15 +13,15 @@ public class GetTests
     {
         // Arrange
         var controller = new ToDoItemsController();
-        controller.items = [];
-        var toDoItem = new ToDoItem // only works if items is public
+        ToDoItemsController.items = [];
+        var toDoItem = new ToDoItem
         {
             ToDoItemId = 1,
             Name = "Test name",
             Description = "Test description",
             IsCompleted = false
         };
-        controller.items.Add(toDoItem);
+        ToDoItemsController.items.Add(toDoItem);
 
         // Act
         var result = controller.Read();
@@ -39,11 +38,11 @@ public class GetTests
     }
 
     [Fact]
-    public void Get_AllItems_ReturnsNotFound() // Only works if items isn't readonly in the controller!
+    public void Get_AllItems_ReturnsNotFound()
     {
         // Arrange
         var controller = new ToDoItemsController();
-        controller.items = null;
+        ToDoItemsController.items = null;
 
         // Act
         var result = controller.Read();
@@ -58,15 +57,15 @@ public class GetTests
     {
         // Arrange
         var controller = new ToDoItemsController();
-        controller.items = [];
-        var toDoItem = new ToDoItem // only works if items is public
+        ToDoItemsController.items = [];
+        var toDoItem = new ToDoItem
         {
             ToDoItemId = 1,
             Name = "Test name",
             Description = "Test description",
             IsCompleted = false
         };
-        controller.items.Add(toDoItem);
+        ToDoItemsController.items.Add(toDoItem);
 
         // Act
         var result = controller.ReadById(1);
@@ -83,21 +82,21 @@ public class GetTests
     {
         // Arrange
         var controller = new ToDoItemsController();
-        controller.items.Clear();
-        var toDoItem = new ToDoItem // only works if items is public
+        ToDoItemsController.items = [];
+        var toDoItem = new ToDoItem
         {
             ToDoItemId = 1,
             Name = "Test name",
             Description = "Test description",
             IsCompleted = false
         };
-        controller.items.Add(toDoItem);
+        ToDoItemsController.items.Add(toDoItem);
 
         // Act
         var result = controller.ReadById(2);
 
         // Assert
         Assert.IsType<NotFoundResult>(result.Result);
-        Assert.DoesNotContain(controller.items, i => i.ToDoItemId == 2);
+        Assert.DoesNotContain(ToDoItemsController.items, i => i.ToDoItemId == 2);
     }
 }

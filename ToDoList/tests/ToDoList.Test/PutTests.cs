@@ -12,7 +12,7 @@ public class PutTests
     {
         // Arrange
         var controller = new ToDoItemsController();
-        controller.items = [];
+        ToDoItemsController.items = [];
         var toDoItem = new ToDoItem
         {
             ToDoItemId = 1,
@@ -20,13 +20,13 @@ public class PutTests
             Description = "Test description",
             IsCompleted = false
         };
-        controller.items.Add(toDoItem);
+        ToDoItemsController.items.Add(toDoItem);
 
         var updatedItem = new ToDoItemUpdateRequestDto("Updated name", "Updated description", true);
 
         // Act
         var result = controller.UpdateById(1, updatedItem);
-        var updatedItemInList = controller.items.Find(i => i.ToDoItemId == 1);
+        var updatedItemInList = ToDoItemsController.items.Find(i => i.ToDoItemId == 1);
 
         // Assert
         Assert.IsType<NoContentResult>(result);
@@ -41,7 +41,7 @@ public class PutTests
     {
         // Arrange
         var controller = new ToDoItemsController();
-        controller.items = [];
+        ToDoItemsController.items = [];
         var toDoItem = new ToDoItem
         {
             ToDoItemId = 1,
@@ -49,7 +49,7 @@ public class PutTests
             Description = "Test description",
             IsCompleted = false
         };
-        controller.items.Add(toDoItem);
+        ToDoItemsController.items.Add(toDoItem);
 
         var updatedItem = new ToDoItemUpdateRequestDto("Updated name", "Updated description", true);
 
@@ -58,6 +58,7 @@ public class PutTests
 
         // Assert
         Assert.IsType<NotFoundResult>(result);
-        Assert.DoesNotContain(controller.items, i => i.ToDoItemId == 2);
+        Assert.DoesNotContain(ToDoItemsController.items, i => i.ToDoItemId == 2);
+        Assert.DoesNotContain(ToDoItemsController.items, i => i.Name == updatedItem.Name);
     }
 }
