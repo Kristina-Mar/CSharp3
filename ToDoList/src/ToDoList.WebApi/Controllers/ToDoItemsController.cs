@@ -7,7 +7,7 @@ using ToDoList.Domain.Models;
 [Route("api/[controller]")]
 public class ToDoItemsController : ControllerBase
 {
-    public static List<ToDoItem> items = [];
+    public List<ToDoItem> items = [];
 
     [HttpPost]
     public IActionResult Create(ToDoItemCreateRequestDto request)

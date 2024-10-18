@@ -14,7 +14,7 @@ public class GetTests
     {
         // Arrange
         var controller = new ToDoItemsController();
-        ToDoItemsController.items = [];
+        controller.items = [];
         var toDoItem = new ToDoItem // only works if items is public
         {
             ToDoItemId = 1,
@@ -22,7 +22,7 @@ public class GetTests
             Description = "Test description",
             IsCompleted = false
         };
-        ToDoItemsController.items.Add(toDoItem);
+        controller.items.Add(toDoItem);
 
         // Act
         var result = controller.Read();
@@ -34,6 +34,7 @@ public class GetTests
         var value = resultResult.Value as IEnumerable<ToDoItemGetResponseDto>;
 
         Assert.NotNull(value);
+        Assert.Single(value);
         Assert.Equal(ToDoItemGetResponseDto.FromDomain(toDoItem), value.ToList()[0]);
     }
 
@@ -42,7 +43,7 @@ public class GetTests
     {
         // Arrange
         var controller = new ToDoItemsController();
-        ToDoItemsController.items = null;
+        controller.items = null;
 
         // Act
         var result = controller.Read();
@@ -57,7 +58,7 @@ public class GetTests
     {
         // Arrange
         var controller = new ToDoItemsController();
-        ToDoItemsController.items = [];
+        controller.items = [];
         var toDoItem = new ToDoItem // only works if items is public
         {
             ToDoItemId = 1,
@@ -65,7 +66,7 @@ public class GetTests
             Description = "Test description",
             IsCompleted = false
         };
-        ToDoItemsController.items.Add(toDoItem);
+        controller.items.Add(toDoItem);
 
         // Act
         var result = controller.ReadById(1);
@@ -82,7 +83,7 @@ public class GetTests
     {
         // Arrange
         var controller = new ToDoItemsController();
-        ToDoItemsController.items.Clear();
+        controller.items.Clear();
         var toDoItem = new ToDoItem // only works if items is public
         {
             ToDoItemId = 1,
@@ -90,7 +91,7 @@ public class GetTests
             Description = "Test description",
             IsCompleted = false
         };
-        ToDoItemsController.items.Add(toDoItem);
+        controller.items.Add(toDoItem);
 
         // Act
         var result = controller.ReadById(2);

@@ -13,7 +13,7 @@ public class DeleteTests
     {
         // Arrange
         var controller = new ToDoItemsController();
-        ToDoItemsController.items.Clear();
+        controller.items.Clear();
         var toDoItem = new ToDoItem
         {
             ToDoItemId = 1,
@@ -28,15 +28,15 @@ public class DeleteTests
             Description = "Test description",
             IsCompleted = false
         };
-        ToDoItemsController.items.Add(toDoItem);
-        ToDoItemsController.items.Add(toDoItem2);
+        controller.items.Add(toDoItem);
+        controller.items.Add(toDoItem2);
 
         // Act
         var result = controller.DeleteById(2);
 
         // Assert
         Assert.IsType<NoContentResult>(result);
-        Assert.DoesNotContain(ToDoItemsController.items, i => i.ToDoItemId == 2);
+        Assert.DoesNotContain(controller.items, i => i.ToDoItemId == 2);
     }
 
     [Fact]
@@ -44,7 +44,7 @@ public class DeleteTests
     {
         // Arrange
         var controller = new ToDoItemsController();
-        ToDoItemsController.items.Clear();
+        controller.items.Clear();
         var toDoItem = new ToDoItem // only works if items is public
         {
             ToDoItemId = 1,
@@ -52,7 +52,7 @@ public class DeleteTests
             Description = "Test description",
             IsCompleted = false
         };
-        ToDoItemsController.items.Add(toDoItem);
+        controller.items.Add(toDoItem);
 
         // Act
         var result = controller.DeleteById(2);

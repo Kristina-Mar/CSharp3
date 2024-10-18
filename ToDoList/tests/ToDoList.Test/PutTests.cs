@@ -12,7 +12,7 @@ public class PutTests
     {
         // Arrange
         var controller = new ToDoItemsController();
-        ToDoItemsController.items = [];
+        controller.items = [];
         var toDoItem = new ToDoItem
         {
             ToDoItemId = 1,
@@ -20,7 +20,7 @@ public class PutTests
             Description = "Test description",
             IsCompleted = false
         };
-        ToDoItemsController.items.Add(toDoItem);
+        controller.items.Add(toDoItem);
 
         var updatedItem = new ToDoItem
         {
@@ -32,7 +32,7 @@ public class PutTests
 
         // Act
         var result = controller.UpdateById(1, ToDoItemUpdateRequestDto.FromDomain(updatedItem));
-        var updatedItemInList = ToDoItemsController.items.Find(i => i.ToDoItemId == 1);
+        var updatedItemInList = controller.items.Find(i => i.ToDoItemId == 1);
 
         // Assert
         Assert.IsType<NoContentResult>(result);
@@ -47,7 +47,7 @@ public class PutTests
     {
         // Arrange
         var controller = new ToDoItemsController();
-        ToDoItemsController.items = [];
+        controller.items = [];
         var toDoItem = new ToDoItem
         {
             ToDoItemId = 1,
@@ -55,7 +55,7 @@ public class PutTests
             Description = "Test description",
             IsCompleted = false
         };
-        ToDoItemsController.items.Add(toDoItem);
+        controller.items.Add(toDoItem);
 
         var updatedItem = new ToDoItem
         {
@@ -70,7 +70,6 @@ public class PutTests
 
         // Assert
         Assert.IsType<NotFoundResult>(result);
-        Assert.True(ToDoItemsController.items.Find(i => i.ToDoItemId == 2) == null);
+        Assert.True(controller.items.Find(i => i.ToDoItemId == 2) == null);
     }
-
 }
