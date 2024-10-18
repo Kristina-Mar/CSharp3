@@ -25,6 +25,7 @@ public class PostTests
 
         var newItem = resultResult as ToDoItemGetResponseDto;
         Assert.NotNull(controller.items.Find(i => i.Name == toDoItemDto.Name));
+        Assert.Single(controller.items);
         Assert.Equal(controller.items.Max(o => o.ToDoItemId), newItem.ToDoItemId);
         Assert.Equal(toDoItemDto.Name, newItem.Name);
         Assert.Equal(toDoItemDto.Description, newItem.Description);
