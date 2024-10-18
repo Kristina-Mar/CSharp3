@@ -22,21 +22,15 @@ public class PutTests
         };
         controller.items.Add(toDoItem);
 
-        var updatedItem = new ToDoItem
-        {
-            ToDoItemId = 1,
-            Name = "Updated name",
-            Description = "Updated description",
-            IsCompleted = true
-        };
+        var updatedItem = new ToDoItemUpdateRequestDto("Updated name", "Updated description", true);
 
         // Act
-        var result = controller.UpdateById(1, ToDoItemUpdateRequestDto.FromDomain(updatedItem));
+        var result = controller.UpdateById(1, updatedItem);
         var updatedItemInList = controller.items.Find(i => i.ToDoItemId == 1);
 
         // Assert
         Assert.IsType<NoContentResult>(result);
-        Assert.Equal(updatedItem.ToDoItemId, updatedItemInList.ToDoItemId);
+        Assert.Equal(1, updatedItemInList.ToDoItemId);
         Assert.Equal(updatedItem.Name, updatedItemInList.Name);
         Assert.Equal(updatedItem.Description, updatedItemInList.Description);
         Assert.Equal(updatedItem.IsCompleted, updatedItemInList.IsCompleted);
@@ -57,19 +51,13 @@ public class PutTests
         };
         controller.items.Add(toDoItem);
 
-        var updatedItem = new ToDoItem
-        {
-            ToDoItemId = 2,
-            Name = "Updated name",
-            Description = "Updated description",
-            IsCompleted = true
-        };
+        var updatedItem = new ToDoItemUpdateRequestDto("Updated name", "Updated description", true);
 
         // Act
-        var result = controller.UpdateById(2, ToDoItemUpdateRequestDto.FromDomain(updatedItem));
+        var result = controller.UpdateById(2, updatedItem);
 
         // Assert
         Assert.IsType<NotFoundResult>(result);
-        Assert.True(controller.items.Find(i => i.ToDoItemId == 2) == null);
+        Assert.DoesNotContain(controller.items, i => i.ToDoItemId == 2);
     }
 }
