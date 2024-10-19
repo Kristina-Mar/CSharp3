@@ -2,49 +2,103 @@ namespace StringCalculator;
 
 public class StringCalculator
 {
-    private string _delimiter = ",";
+    private string _numbersWorkingVersion = string.Empty;
+    private string _defaultDelimiter = ",";
     private string _exceptionMessage = "Negatives not allowed: ";
-    List<int> _exceptionListOfNegativeNumbers = [];
+    private List<int> _exceptionListOfNegativeNumbers = [];
+
     public int Add(string numbers)
     {
-        if (numbers == string.Empty)
+        _numbersWorkingVersion = numbers;
+
+        if (_numbersWorkingVersion == string.Empty)
         {
             return 0;
         }
-        if (int.TryParse(numbers, out int oneNumber))
+        if (HasOnlyOneNumber())
         {
-            return oneNumber;
+            return int.Parse(_numbersWorkingVersion);
         }
-        if (numbers.StartsWith("//[") && numbers.Count(n => n == '[') > 1)
+        if (HasMultipleDelimiters())
         {
-            int indexEndOfLine = numbers.IndexOf('\n');
-            int indexEndOfFirstDelimiter = numbers.IndexOf(']');
-            _delimiter = numbers.Substring(3, indexEndOfFirstDelimiter - 3);
+            _numbersWorkingVersion = HandleMultipleDelimiters();
+        }
+        if (HasDelimiterOfDefinedLength())
+        {
+            _numbersWorkingVersion = HandleDelimiterOfDefinedLegth();
+        }
+        if (HasCustomSingleCharDelimiter())
+        {
+            _numbersWorkingVersion = HandleCustomSingleCharDelimiter();
+        }
+        if (HasLineBreaks())
+        {
+            _numbersWorkingVersion = HandleLineBreaks();
+        }
 
-            int secondDelimiterStartIndex = numbers.IndexOf('[', indexEndOfFirstDelimiter) + 1;
-            int indexEndOfSecondDelimiter = numbers.IndexOf(']', indexEndOfFirstDelimiter + 1);
-            string secondDelimiter = numbers.Substring(secondDelimiterStartIndex, indexEndOfSecondDelimiter - secondDelimiterStartIndex);
-            numbers = numbers.Substring(indexEndOfLine + 1);
-            numbers = numbers.Replace(secondDelimiter, _delimiter);
-        }
-        if (numbers.StartsWith("//["))
+        var arrayOfNumbers = ParseStringIntoNumberArray();
+
+        if (HasNegativeNumbers(arrayOfNumbers))
         {
-            int indexEndOfLine = numbers.IndexOf('\n');
-            int lengthOfDelimiter = numbers.IndexOf(']') - 3;
-            _delimiter = numbers.Substring(3, lengthOfDelimiter);
-            numbers = numbers.Substring(indexEndOfLine + 1);
+            ThrowNegativeNumbersNotAllowedException(arrayOfNumbers);
         }
-        if (numbers.StartsWith("//"))
-        {
-            int indexEndOfLine = numbers.IndexOf('\n');
-            _delimiter = numbers.Substring(2, 1);
-            numbers = numbers.Substring(indexEndOfLine + 1);
-        }
-        if (numbers.Contains('\n'))
-        {
-            numbers = numbers.Replace("\n", _delimiter);
-        }
-        string[] arrayOfNumbersAsStrings = numbers.Split(_delimiter);
+
+        return arrayOfNumbers.Sum();
+    }
+
+    private bool HasOnlyOneNumber() => int.TryParse(_numbersWorkingVersion, out _);
+
+    private bool HasMultipleDelimiters() => _numbersWorkingVersion.StartsWith("//[") && _numbersWorkingVersion.Count(n => n == '[') > 1;
+
+    private bool HasDelimiterOfDefinedLength() => _numbersWorkingVersion.StartsWith("//[");
+
+    private bool HasCustomSingleCharDelimiter() => _numbersWorkingVersion.StartsWith("//");
+
+    private bool HasLineBreaks() => _numbersWorkingVersion.Contains('\n');
+
+    private bool HasNegativeNumbers(int[] arrayOfNumbers) => arrayOfNumbers.Any(n => n < 0);
+
+    private string HandleMultipleDelimiters()
+    {
+        int indexEndOfLine = _numbersWorkingVersion.IndexOf('\n');
+        int indexEndOfFirstDelimiter = _numbersWorkingVersion.IndexOf(']');
+        _defaultDelimiter = _numbersWorkingVersion.Substring(3, indexEndOfFirstDelimiter - 3);
+
+        int secondDelimiterStartIndex = _numbersWorkingVersion.IndexOf('[', indexEndOfFirstDelimiter) + 1;
+        int indexEndOfSecondDelimiter = _numbersWorkingVersion.IndexOf(']', indexEndOfFirstDelimiter + 1);
+        string secondDelimiter = _numbersWorkingVersion.Substring(secondDelimiterStartIndex, indexEndOfSecondDelimiter - secondDelimiterStartIndex);
+
+        _numbersWorkingVersion = _numbersWorkingVersion.Substring(indexEndOfLine + 1);
+        _numbersWorkingVersion = _numbersWorkingVersion.Replace(secondDelimiter, _defaultDelimiter);
+        return _numbersWorkingVersion;
+    }
+
+    private string HandleDelimiterOfDefinedLegth()
+    {
+        int indexEndOfLine = _numbersWorkingVersion.IndexOf('\n');
+        int lengthOfDelimiter = _numbersWorkingVersion.IndexOf(']') - 3;
+        _defaultDelimiter = _numbersWorkingVersion.Substring(3, lengthOfDelimiter);
+        _numbersWorkingVersion = _numbersWorkingVersion.Substring(indexEndOfLine + 1);
+        return _numbersWorkingVersion;
+    }
+
+    private string HandleCustomSingleCharDelimiter()
+    {
+        int indexEndOfLine = _numbersWorkingVersion.IndexOf('\n');
+        _defaultDelimiter = _numbersWorkingVersion.Substring(2, 1);
+        _numbersWorkingVersion = _numbersWorkingVersion.Substring(indexEndOfLine + 1);
+        return _numbersWorkingVersion;
+    }
+
+    private string HandleLineBreaks()
+    {
+        _numbersWorkingVersion = _numbersWorkingVersion.Replace("\n", _defaultDelimiter);
+        return _numbersWorkingVersion;
+    }
+
+    private int[] ParseStringIntoNumberArray()
+    {
+        string[] arrayOfNumbersAsStrings = _numbersWorkingVersion.Split(_defaultDelimiter);
         int[] arrayOfNumbers = new int[arrayOfNumbersAsStrings.Length];
         for (int i = 0; i < arrayOfNumbersAsStrings.Length; i++)
         {
@@ -55,15 +109,15 @@ public class StringCalculator
             }
         }
 
-        if (arrayOfNumbers.Any(n => n < 0))
-        {
-            foreach (int n in arrayOfNumbers.Where(n => n < 0))
-            {
-                _exceptionListOfNegativeNumbers.Add(n);
-            }
-            throw new ArgumentException($"{_exceptionMessage}{string.Join(", ", _exceptionListOfNegativeNumbers)}");
-        }
+        return arrayOfNumbers;
+    }
 
-        return arrayOfNumbers.Sum();
+    private void ThrowNegativeNumbersNotAllowedException(int[] arrayOfNumbers)
+    {
+        foreach (int n in arrayOfNumbers.Where(n => n < 0))
+        {
+            _exceptionListOfNegativeNumbers.Add(n);
+        }
+        throw new ArgumentException($"{_exceptionMessage}{string.Join(", ", _exceptionListOfNegativeNumbers)}");
     }
 }
