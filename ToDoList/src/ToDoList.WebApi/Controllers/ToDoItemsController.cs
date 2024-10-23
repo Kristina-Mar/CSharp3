@@ -2,12 +2,19 @@ namespace ToDoList.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.DTOs;
 using ToDoList.Domain.Models;
+using ToDoList.Persistence;
 
 [ApiController]
 [Route("api/[controller]")]
 public class ToDoItemsController : ControllerBase
 {
     public static List<ToDoItem> items = [];
+    private readonly ToDoItemsContext context;
+
+    public ToDoItemsController(ToDoItemsContext context)
+    {
+        this.context = context;
+    }
 
     [HttpPost]
     public IActionResult Create(ToDoItemCreateRequestDto request)
@@ -18,8 +25,8 @@ public class ToDoItemsController : ControllerBase
         //try to create an item
         try
         {
-            item.ToDoItemId = items.Count == 0 ? 1 : items.Max(o => o.ToDoItemId) + 1;
-            items.Add(item);
+            context.ToDoItems.Add(item); // Add, Update, Remove, Find and ToList, alway SaveChanges (except Find)
+            context.SaveChanges();
         }
         catch (Exception ex)
         {
