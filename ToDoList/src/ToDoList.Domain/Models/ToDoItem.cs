@@ -1,7 +1,5 @@
 ﻿namespace ToDoList.Domain.Models;
 
-using ToDoList.Domain.DTOs;
-
 public class ToDoItem
 {
     public int ToDoItemId { get; set; }

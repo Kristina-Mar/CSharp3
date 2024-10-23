@@ -1,8 +1,6 @@
 namespace ToDoList.Domain.DTOs;
 
-using System.Security.Cryptography.X509Certificates;
 using ToDoList.Domain.Models;
-
 
 public record class ToDoItemGetResponseDto
 {
