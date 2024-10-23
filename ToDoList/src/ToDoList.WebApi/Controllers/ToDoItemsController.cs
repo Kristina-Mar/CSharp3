@@ -10,7 +10,7 @@ public class ToDoItemsController : ControllerBase
     public static List<ToDoItem> items = [];
 
     [HttpPost]
-    public IActionResult Create(ToDoItemCreateRequestDto request)
+    public ActionResult<ToDoItemGetResponseDto> Create(ToDoItemCreateRequestDto request)
     {
         //map to Domain object as soon as possible
         var item = request.ToDomain();
@@ -37,6 +37,7 @@ public class ToDoItemsController : ControllerBase
     }
 
     [HttpGet]
+    public ActionResult<IEnumerable<ToDoItemGetResponseDto>> Read()
     public ActionResult<IEnumerable<ToDoItemGetResponseDto>> Read()
     {
         List<ToDoItemGetResponseDto> itemsDto = [];
@@ -66,6 +67,7 @@ public class ToDoItemsController : ControllerBase
     }
 
     [HttpGet("{toDoItemId:int}")]
+    public ActionResult<ToDoItemGetResponseDto> ReadById(int toDoItemId)
     public ActionResult<ToDoItemGetResponseDto> ReadById(int toDoItemId)
     {
         // Editor mi podciarkuje Find s chybou: Converting null literal or possible null value to non-nullable type.
