@@ -9,7 +9,6 @@
 ✨ [CSS](CSS.md)\
 👩‍💻 [ClientServerRelationship](ClientServerRelationship.md)\
 📨 [HTTP](HTTP/HTTP.md)\
-🤝 [REST API](REST%20API.md)\
 ✍️ [Markdown](Markdown.md)
 
 ---
@@ -45,5 +44,5 @@ Software Project Storage [GitHub](GitHub.md)
 ### 🧪 Testing
 
 Unit Testing Library [xUnit](https://xunit.net)\
-Assertions Library [FluentAssertions](https://fluentassertions.com)\
+Assertions Library [FluentAssertions](https://fluentassertions.com)
 Mocking Library [NSubstitute](https://nsubstitute.github.io)
