@@ -40,7 +40,7 @@ public class GetTests
     }
 
     [Fact]
-    public void Get_AllItems_ReturnsNotFound()
+    public void Get_AllItemsWhenNull_ReturnsNotFound()
     {
         // Arrange
         var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
@@ -56,7 +56,7 @@ public class GetTests
     }
 
     [Fact]
-    public void Get_OneItemByID_ReturnsItem()
+    public void Get_ValidId_ReturnsItem()
     {
         // Arrange
         var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
@@ -82,7 +82,7 @@ public class GetTests
     }
 
     [Fact]
-    public void Get_OneItemByID_ReturnsNotFound()
+    public void Get_InvalidId_ReturnsNotFound()
     {
         // Arrange
         var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");

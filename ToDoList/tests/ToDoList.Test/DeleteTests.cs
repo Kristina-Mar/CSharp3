@@ -8,7 +8,7 @@ using ToDoList.WebApi.Controllers;
 public class DeleteTests
 {
     [Fact]
-    public void Delete_OneItemById_DeletesItem()
+    public void Delete_ValiId_DeletesItem()
     {
         // Arrange
         var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
@@ -41,7 +41,7 @@ public class DeleteTests
     }
 
     [Fact]
-    public void Delete_OneItemById_ReturnsNotFound()
+    public void Delete_InvalidId_ReturnsNotFound()
     {
         // Arrange
         var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
