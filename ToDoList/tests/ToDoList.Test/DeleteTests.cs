@@ -16,12 +16,14 @@ public class DeleteTests
         controller.items = [];
         var toDoItem = new ToDoItem
         {
+            ToDoItemId = 1,
             Name = "Test name",
             Description = "Test description",
             IsCompleted = false
         };
         var toDoItem2 = new ToDoItem
         {
+            ToDoItemId = 2,
             Name = "Test name",
             Description = "Test description",
             IsCompleted = false
