@@ -4,6 +4,7 @@ namespace ToDoList.Test;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.DTOs;
 using ToDoList.Domain.Models;
+using ToDoList.Persistence;
 using ToDoList.WebApi.Controllers;
 
 public class GetTests
@@ -12,8 +13,9 @@ public class GetTests
     public void Get_AllItems_ReturnsAllItems()
     {
         // Arrange
-        var controller = new ToDoItemsController();
-        ToDoItemsController.items = [];
+        var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
+        var controller = new ToDoItemsController(context);
+        controller.items = [];
         var toDoItem = new ToDoItem
         {
             ToDoItemId = 1,
@@ -21,7 +23,7 @@ public class GetTests
             Description = "Test description",
             IsCompleted = false
         };
-        ToDoItemsController.items.Add(toDoItem);
+        controller.items.Add(toDoItem);
 
         // Act
         var result = controller.Read();
@@ -41,8 +43,9 @@ public class GetTests
     public void Get_AllItems_ReturnsNotFound()
     {
         // Arrange
-        var controller = new ToDoItemsController();
-        ToDoItemsController.items = null;
+        var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
+        var controller = new ToDoItemsController(context);
+        controller.items = null;
 
         // Act
         var result = controller.Read();
@@ -56,8 +59,9 @@ public class GetTests
     public void Get_OneItemByID_ReturnsItem()
     {
         // Arrange
-        var controller = new ToDoItemsController();
-        ToDoItemsController.items = [];
+        var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
+        var controller = new ToDoItemsController(context);
+        controller.items = [];
         var toDoItem = new ToDoItem
         {
             ToDoItemId = 1,
@@ -65,7 +69,7 @@ public class GetTests
             Description = "Test description",
             IsCompleted = false
         };
-        ToDoItemsController.items.Add(toDoItem);
+        controller.items.Add(toDoItem);
 
         // Act
         var result = controller.ReadById(1);
@@ -81,8 +85,9 @@ public class GetTests
     public void Get_OneItemByID_ReturnsNotFound()
     {
         // Arrange
-        var controller = new ToDoItemsController();
-        ToDoItemsController.items = [];
+        var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
+        var controller = new ToDoItemsController(context);
+        controller.items = [];
         var toDoItem = new ToDoItem
         {
             ToDoItemId = 1,
@@ -90,13 +95,13 @@ public class GetTests
             Description = "Test description",
             IsCompleted = false
         };
-        ToDoItemsController.items.Add(toDoItem);
+        controller.items.Add(toDoItem);
 
         // Act
         var result = controller.ReadById(2);
 
         // Assert
         Assert.IsType<NotFoundResult>(result.Result);
-        Assert.DoesNotContain(ToDoItemsController.items, i => i.ToDoItemId == 2);
+        Assert.DoesNotContain(controller.items, i => i.ToDoItemId == 2);
     }
 }
