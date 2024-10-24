@@ -25,7 +25,7 @@ public class ToDoItemsController : ControllerBase
         //try to create an item
         try
         {
-            context.ToDoItems.Add(item); // Add, Update, Remove, Find and ToList, alway SaveChanges (except Find)
+            context.ToDoItems.Add(item);
             context.SaveChanges();
         }
         catch (Exception ex)
@@ -46,10 +46,10 @@ public class ToDoItemsController : ControllerBase
     [HttpGet]
     public ActionResult<IEnumerable<ToDoItemGetResponseDto>> Read()
     {
-        List<ToDoItemGetResponseDto> itemsDto = [];
+        List<ToDoItemGetResponseDto> allItemsDto = [];
         try
         {
-            if (items == null)
+            if (context.ToDoItems == null)
             {
                 return NotFound();
             }
@@ -62,14 +62,14 @@ public class ToDoItemsController : ControllerBase
                 var itemDto = ToDoItemGetResponseDto.FromDomain(item);
                 itemsDto.Add(itemDto);
             }*/
-            itemsDto = items.Select(ToDoItemGetResponseDto.FromDomain).ToList();
+            allItemsDto = context.ToDoItems.Select(ToDoItemGetResponseDto.FromDomain).ToList();
         }
         catch (Exception ex)
         {
             return Problem(ex.Message, null, StatusCodes.Status500InternalServerError); //500
         }
 
-        return Ok(itemsDto);
+        return Ok(allItemsDto);
     }
 
     [HttpGet("{toDoItemId:int}")]
@@ -77,11 +77,11 @@ public class ToDoItemsController : ControllerBase
     {
         // Editor mi podciarkuje Find s chybou: Converting null literal or possible null value to non-nullable type.
         // robim teda z item nullable typ.
-        ToDoItem? item;
+        ToDoItem? requestedItem;
         try
         {
-            item = items.Find(i => i.ToDoItemId == toDoItemId);
-            if (item is null)
+            requestedItem = context.ToDoItems.Find(toDoItemId);
+            if (requestedItem is null)
             {
                 return NotFound();
             }
@@ -91,23 +91,25 @@ public class ToDoItemsController : ControllerBase
             return Problem(ex.Message, null, StatusCodes.Status500InternalServerError); //500
         }
 
-        return Ok(ToDoItemGetResponseDto.FromDomain(item));
+        return Ok(ToDoItemGetResponseDto.FromDomain(requestedItem));
     }
 
     [HttpPut("{toDoItemId:int}")]
     public IActionResult UpdateById(int toDoItemId, [FromBody] ToDoItemUpdateRequestDto request)
     {
         var updatedItem = request.ToDomain();
-        updatedItem.ToDoItemId = toDoItemId;
+
         try
         {
-            // editor nasepkava, aby som pouzila radsej var
-            var index = items.FindIndex(i => i.ToDoItemId == toDoItemId);
-            if (index == -1)
+            var itemToUpdateInDb = context.ToDoItems.Find(toDoItemId);
+            if (itemToUpdateInDb == null)
             {
                 return NotFound();
             }
-            items[index] = updatedItem;
+            itemToUpdateInDb.Name = updatedItem.Name;
+            itemToUpdateInDb.Description = updatedItem.Description;
+            itemToUpdateInDb.IsCompleted = updatedItem.IsCompleted;
+            context.SaveChanges();
         }
         catch (Exception ex)
         {
@@ -124,12 +126,13 @@ public class ToDoItemsController : ControllerBase
         ToDoItem? itemToDelete;
         try
         {
-            itemToDelete = items.Find(i => i.ToDoItemId == toDoItemId);
+            itemToDelete = context.ToDoItems.Find(toDoItemId);
             if (itemToDelete is null)
             {
                 return NotFound();
             }
-            items.Remove(itemToDelete);
+            context.ToDoItems.Remove(itemToDelete);
+            context.SaveChanges();
         }
         catch (Exception ex)
         {
