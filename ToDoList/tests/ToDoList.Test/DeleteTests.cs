@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.Models;
 using ToDoList.WebApi.Controllers;
 
+[Collection("Tests")]
 public class DeleteTests
 {
     [Fact]

@@ -6,6 +6,7 @@ using ToDoList.Domain.DTOs;
 using ToDoList.Domain.Models;
 using ToDoList.WebApi.Controllers;
 
+[Collection("Tests")]
 public class GetTests
 {
     [Fact]
