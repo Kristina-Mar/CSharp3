@@ -2,21 +2,13 @@ namespace ToDoList.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.DTOs;
 using ToDoList.Domain.Models;
-using ToDoList.Persistence;
 using ToDoList.Persistence.Repositories;
 
 [ApiController]
 [Route("api/[controller]")]
 public class ToDoItemsController : ControllerBase
 {
-    public List<ToDoItem> items = [];
-    private readonly ToDoItemsContext context;
     private readonly IRepository<ToDoItem> repository;
-
-    public ToDoItemsController(ToDoItemsContext context)
-    {
-        this.context = context;
-    }
 
     public ToDoItemsController(IRepository<ToDoItem> repository)
     {
@@ -55,10 +47,6 @@ public class ToDoItemsController : ControllerBase
         List<ToDoItemGetResponseDto> allItemsDto = [];
         try
         {
-            if (context.ToDoItems == null)
-            {
-                return NotFound();
-            }
             /*
             Dobre riesenie, slo by napisat aj cez LINQ napriklad takto:
             itemsDto = items.Select(ToDoItemGetResponseDto.FromDomain).ToList();
@@ -68,14 +56,14 @@ public class ToDoItemsController : ControllerBase
                 var itemDto = ToDoItemGetResponseDto.FromDomain(item);
                 itemsDto.Add(itemDto);
             }*/
-            allItemsDto = context.ToDoItems.Select(ToDoItemGetResponseDto.FromDomain).ToList();
+            allItemsDto = repository.Read();
         }
         catch (Exception ex)
         {
             return Problem(ex.Message, null, StatusCodes.Status500InternalServerError); //500
         }
 
-        return Ok(allItemsDto);
+        return (allItemsDto != null) ? Ok(allItemsDto) : NotFound();
     }
 
     [HttpGet("{toDoItemId:int}")]
@@ -86,65 +74,49 @@ public class ToDoItemsController : ControllerBase
         ToDoItem? requestedItem;
         try
         {
-            requestedItem = context.ToDoItems.Find(toDoItemId);
-            if (requestedItem is null)
-            {
-                return NotFound();
-            }
+            requestedItem = repository.ReadById(toDoItemId);
         }
         catch (Exception ex)
         {
             return Problem(ex.Message, null, StatusCodes.Status500InternalServerError); //500
         }
 
-        return Ok(ToDoItemGetResponseDto.FromDomain(requestedItem));
+        return (requestedItem != null) ? Ok(ToDoItemGetResponseDto.FromDomain(requestedItem)) : NotFound();
     }
 
     [HttpPut("{toDoItemId:int}")]
     public IActionResult UpdateById(int toDoItemId, [FromBody] ToDoItemUpdateRequestDto request)
     {
         var updatedItem = request.ToDomain();
+        bool isUpdated;
 
         try
         {
-            var itemToUpdateInDb = context.ToDoItems.Find(toDoItemId);
-            if (itemToUpdateInDb == null)
-            {
-                return NotFound();
-            }
-            itemToUpdateInDb.Name = updatedItem.Name;
-            itemToUpdateInDb.Description = updatedItem.Description;
-            itemToUpdateInDb.IsCompleted = updatedItem.IsCompleted;
-            context.SaveChanges();
+            isUpdated = repository.UpdateById(toDoItemId, updatedItem);
         }
         catch (Exception ex)
         {
             return Problem(ex.Message, null, StatusCodes.Status500InternalServerError); //500
         }
 
-        return NoContent();
+        return isUpdated ? NoContent() : NotFound();
     }
 
     [HttpDelete("{toDoItemId:int}")]
     public ActionResult DeleteById(int toDoItemId)
     {
-        // podobne ako pri ReadById
         ToDoItem? itemToDelete;
+        bool isDeleted;
+
         try
         {
-            itemToDelete = context.ToDoItems.Find(toDoItemId);
-            if (itemToDelete is null)
-            {
-                return NotFound();
-            }
-            context.ToDoItems.Remove(itemToDelete);
-            context.SaveChanges();
+            isDeleted = repository.DeleteById(toDoItemId);
         }
         catch (Exception ex)
         {
             return Problem(ex.Message, null, StatusCodes.Status500InternalServerError); //500
         }
 
-        return NoContent();
+        return isDeleted ? NoContent() : NotFound();
     }
 }

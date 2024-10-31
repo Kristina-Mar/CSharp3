@@ -1,5 +1,7 @@
 namespace ToDoList.Persistence.Repositories;
 
+using System.Collections.Generic;
+using ToDoList.Domain.DTOs;
 using ToDoList.Domain.Models;
 
 public class ToDoItemsRepository : IRepository<ToDoItem>
@@ -16,8 +18,41 @@ public class ToDoItemsRepository : IRepository<ToDoItem>
         context.SaveChanges();
     }
 
-    public ToDoItem ReadById(int id)
+    public List<ToDoItemGetResponseDto> Read()
     {
-        return context.ToDoItems.Find(id);
+        return context.ToDoItems.Select(ToDoItemGetResponseDto.FromDomain).ToList();
+    }
+
+    public ToDoItem ReadById(int toDoItemId)
+    {
+        return context.ToDoItems.Find(toDoItemId);
+    }
+
+    public bool UpdateById(int toDoItemId, ToDoItem updatedItem)
+    {
+        var itemToUpdateInDb = context.ToDoItems.Find(toDoItemId);
+        if (itemToUpdateInDb == null)
+        {
+            return false;
+        }
+
+        itemToUpdateInDb.Name = updatedItem.Name;
+        itemToUpdateInDb.Description = updatedItem.Description;
+        itemToUpdateInDb.IsCompleted = updatedItem.IsCompleted;
+        context.SaveChanges();
+        return true;
+    }
+
+    public bool DeleteById(int toDoItemId)
+    {
+        var itemToDeleteInDb = context.ToDoItems.Find(toDoItemId);
+        if (itemToDeleteInDb == null)
+        {
+            return false;
+        }
+
+        context.ToDoItems.Remove(itemToDeleteInDb);
+        context.SaveChanges();
+        return true;
     }
 }
