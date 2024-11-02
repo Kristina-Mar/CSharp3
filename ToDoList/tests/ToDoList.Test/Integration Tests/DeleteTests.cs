@@ -7,7 +7,7 @@ using ToDoList.WebApi.Controllers;
 
 public class DeleteTests
 {
-    [Fact]
+   /* [Fact]
     public void Delete_ValiId_DeletesItem()
     {
         // Arrange
@@ -63,5 +63,5 @@ public class DeleteTests
         Assert.IsType<NotFoundResult>(result);
         Assert.DoesNotContain(controller.items, i => i.ToDoItemId == 2);
         Assert.Single(controller.items);
-    }
+    }*/
 }

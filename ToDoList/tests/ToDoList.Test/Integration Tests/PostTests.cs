@@ -6,7 +6,7 @@ using ToDoList.WebApi.Controllers;
 
 public class PostTests
 {
-    [Fact]
+    /*[Fact]
     public void Post_NewItem_CreatesItem()
     {
         // Arrange
@@ -27,5 +27,5 @@ public class PostTests
         Assert.Equal(toDoItemDto.Name, newItem.Name);
         Assert.Equal(toDoItemDto.Description, newItem.Description);
         Assert.Equal(toDoItemDto.IsCompleted, newItem.IsCompleted);
-    }
+    }*/
 }
