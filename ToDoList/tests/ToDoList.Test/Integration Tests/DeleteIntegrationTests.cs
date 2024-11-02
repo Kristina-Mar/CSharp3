@@ -5,7 +5,7 @@ using ToDoList.Domain.Models;
 using ToDoList.Persistence;
 using ToDoList.WebApi.Controllers;
 
-public class DeleteTests
+public class DeleteIntegrationTests
 {
    /* [Fact]
     public void Delete_ValiId_DeletesItem()

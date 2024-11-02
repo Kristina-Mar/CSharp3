@@ -6,7 +6,7 @@ using ToDoList.Domain.Models;
 using ToDoList.Persistence;
 using ToDoList.WebApi.Controllers;
 
-public class PutTests
+public class PutIntegrationTests
 {
     /* [Fact]
      public void Put_ValidId_UpdatesItem()

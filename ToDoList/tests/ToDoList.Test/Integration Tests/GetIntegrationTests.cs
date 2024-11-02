@@ -7,7 +7,7 @@ using ToDoList.Domain.Models;
 using ToDoList.Persistence;
 using ToDoList.WebApi.Controllers;
 
-public class GetTests
+public class GetIntegrationTests
 {
     /* [Fact]
      public void Get_AllItems_ReturnsAllItems()
