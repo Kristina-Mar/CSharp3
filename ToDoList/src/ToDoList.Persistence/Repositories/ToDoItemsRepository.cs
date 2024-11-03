@@ -20,6 +20,9 @@ public class ToDoItemsRepository : IRepository<ToDoItem>
 
     public List<ToDoItemGetResponseDto> Read()
     {
+        /*
+        Ako pisem uz v IRepository, metoda by mala vracat List<ToDoItem>, ToDoItemGetResponseDto.FromDomain teda presun az do controlleru
+        */
         return context.ToDoItems.Select(ToDoItemGetResponseDto.FromDomain).ToList();
     }
 
