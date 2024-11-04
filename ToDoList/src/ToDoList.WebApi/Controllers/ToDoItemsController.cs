@@ -105,6 +105,7 @@ public class ToDoItemsController : ControllerBase
     [HttpDelete("{toDoItemId:int}")]
     public ActionResult DeleteById(int toDoItemId)
     {
+        // editor mi nasepkava, ze mozes variable itemToDelete zmazat kedze sa uz nepouziva
         ToDoItem? itemToDelete;
         bool isDeleted;
 
