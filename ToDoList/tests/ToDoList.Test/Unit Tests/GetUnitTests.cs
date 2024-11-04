@@ -36,7 +36,24 @@ public class GetUnitTests
 
         List<ToDoItemGetResponseDto> allItemsExpected = [toDoItem1Dto, toDoItem2Dto];
 
-        repositoryMock.Read().Returns(allItemsExpected);
+        var toDoItem1 = new ToDoItem
+        {
+            ToDoItemId = 1,
+            Name = "Test name",
+            Description = "Test description",
+            IsCompleted = false
+        };
+        var toDoItem2 = new ToDoItem
+        {
+            ToDoItemId = 2,
+            Name = "Test name",
+            Description = "Test description",
+            IsCompleted = true
+        };
+
+        List<ToDoItem> allItemsFromRepository = [toDoItem1, toDoItem2];
+
+        repositoryMock.Read().Returns(allItemsFromRepository);
 
         // Act
         var result = controller.Read();

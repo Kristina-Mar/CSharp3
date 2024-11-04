@@ -44,26 +44,17 @@ public class ToDoItemsController : ControllerBase
     [HttpGet]
     public ActionResult<IEnumerable<ToDoItemGetResponseDto>> Read()
     {
-        List<ToDoItemGetResponseDto> allItemsDto = [];
+        List<ToDoItem> allItems = [];
         try
         {
-            /*
-            Dobre riesenie, slo by napisat aj cez LINQ napriklad takto:
-            itemsDto = items.Select(ToDoItemGetResponseDto.FromDomain).ToList();
-            */
-            /*foreach (var item in items)
-            {
-                var itemDto = ToDoItemGetResponseDto.FromDomain(item);
-                itemsDto.Add(itemDto);
-            }*/
-            allItemsDto = repository.Read();
+            allItems = repository.Read();
         }
         catch (Exception ex)
         {
-            return Problem(ex.Message, null, StatusCodes.Status500InternalServerError); //500
+            return Problem(ex.Message, null, StatusCodes.Status500InternalServerError);
         }
 
-        return (allItemsDto != null) ? Ok(allItemsDto) : NotFound();
+        return (allItems != null) ? Ok(allItems.Select(ToDoItemGetResponseDto.FromDomain).ToList()) : NotFound();
     }
 
     [HttpGet("{toDoItemId:int}")]
@@ -78,7 +69,7 @@ public class ToDoItemsController : ControllerBase
         }
         catch (Exception ex)
         {
-            return Problem(ex.Message, null, StatusCodes.Status500InternalServerError); //500
+            return Problem(ex.Message, null, StatusCodes.Status500InternalServerError);
         }
 
         return (requestedItem != null) ? Ok(ToDoItemGetResponseDto.FromDomain(requestedItem)) : NotFound();
@@ -96,7 +87,7 @@ public class ToDoItemsController : ControllerBase
         }
         catch (Exception ex)
         {
-            return Problem(ex.Message, null, StatusCodes.Status500InternalServerError); //500
+            return Problem(ex.Message, null, StatusCodes.Status500InternalServerError);
         }
 
         return isUpdated ? NoContent() : NotFound();
@@ -105,8 +96,6 @@ public class ToDoItemsController : ControllerBase
     [HttpDelete("{toDoItemId:int}")]
     public ActionResult DeleteById(int toDoItemId)
     {
-        // editor mi nasepkava, ze mozes variable itemToDelete zmazat kedze sa uz nepouziva
-        ToDoItem? itemToDelete;
         bool isDeleted;
 
         try
@@ -115,7 +104,7 @@ public class ToDoItemsController : ControllerBase
         }
         catch (Exception ex)
         {
-            return Problem(ex.Message, null, StatusCodes.Status500InternalServerError); //500
+            return Problem(ex.Message, null, StatusCodes.Status500InternalServerError);
         }
 
         return isDeleted ? NoContent() : NotFound();

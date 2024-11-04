@@ -1,7 +1,6 @@
 namespace ToDoList.Persistence.Repositories;
 
 using System.Collections.Generic;
-using ToDoList.Domain.DTOs;
 using ToDoList.Domain.Models;
 
 public class ToDoItemsRepository : IRepository<ToDoItem>
@@ -18,12 +17,9 @@ public class ToDoItemsRepository : IRepository<ToDoItem>
         context.SaveChanges();
     }
 
-    public List<ToDoItemGetResponseDto> Read()
+    public List<ToDoItem> Read()
     {
-        /*
-        Ako pisem uz v IRepository, metoda by mala vracat List<ToDoItem>, ToDoItemGetResponseDto.FromDomain teda presun az do controlleru
-        */
-        return context.ToDoItems.Select(ToDoItemGetResponseDto.FromDomain).ToList();
+        return context.ToDoItems.ToList();
     }
 
     public ToDoItem ReadById(int toDoItemId)
