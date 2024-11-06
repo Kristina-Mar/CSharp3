@@ -79,11 +79,12 @@ public class ToDoItemsController : ControllerBase
     public IActionResult UpdateById(int toDoItemId, [FromBody] ToDoItemUpdateRequestDto request)
     {
         var updatedItem = request.ToDomain();
+        updatedItem.ToDoItemId = toDoItemId;
         bool isUpdated;
 
         try
         {
-            isUpdated = repository.UpdateById(toDoItemId, updatedItem);
+            isUpdated = repository.UpdateById(updatedItem);
         }
         catch (Exception ex)
         {

@@ -5,6 +5,6 @@ public interface IRepository<T> where T : class
     void Create(T item);
     public T ReadById(int toDoItemId);
     public List<T> Read();
-    public bool UpdateById(int toDoItemId, T updatedItem);
+    public bool UpdateById(T updatedItem);
     public bool DeleteById(int toDoItemId);
 }

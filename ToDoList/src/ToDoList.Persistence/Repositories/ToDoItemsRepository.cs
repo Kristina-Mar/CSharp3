@@ -27,17 +27,14 @@ public class ToDoItemsRepository : IRepository<ToDoItem>
         return context.ToDoItems.Find(toDoItemId);
     }
 
-    public bool UpdateById(int toDoItemId, ToDoItem updatedItem)
+    public bool UpdateById(ToDoItem updatedItem)
     {
-        var itemToUpdateInDb = context.ToDoItems.Find(toDoItemId);
+        var itemToUpdateInDb = context.ToDoItems.Find(updatedItem.ToDoItemId);
         if (itemToUpdateInDb == null)
         {
             return false;
         }
-
-        itemToUpdateInDb.Name = updatedItem.Name;
-        itemToUpdateInDb.Description = updatedItem.Description;
-        itemToUpdateInDb.IsCompleted = updatedItem.IsCompleted;
+        context.Entry(itemToUpdateInDb).CurrentValues.SetValues(updatedItem);
         context.SaveChanges();
         return true;
     }
