@@ -14,8 +14,9 @@ public class GetIntegrationTests
      {
          // Arrange
          var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
-         var controller = new ToDoItemsController(context);
-         controller.items = [];
+         var repository = new ToDoItemsRepository(context);
+         var controller = new ToDoItemsController(repository);
+
          var toDoItem = new ToDoItem
          {
              ToDoItemId = 1,

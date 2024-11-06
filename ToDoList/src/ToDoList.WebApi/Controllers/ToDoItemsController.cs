@@ -44,7 +44,7 @@ public class ToDoItemsController : ControllerBase
     [HttpGet]
     public ActionResult<IEnumerable<ToDoItemGetResponseDto>> Read()
     {
-        List<ToDoItem> allItems = [];
+        IEnumerable<ToDoItem> allItems = [];
         try
         {
             allItems = repository.Read();

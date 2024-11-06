@@ -26,6 +26,7 @@ public class PutUnitTests
 
         // Assert
         Assert.IsType<NoContentResult>(result);
+        repositoryMock.Received(1).UpdateById(Arg.Any<ToDoItem>());
     }
 
     [Fact]
@@ -44,6 +45,7 @@ public class PutUnitTests
 
         // Assert
         Assert.IsType<NotFoundResult>(result);
+        repositoryMock.Received(1).UpdateById(Arg.Any<ToDoItem>());
     }
 
     [Fact]
@@ -63,5 +65,6 @@ public class PutUnitTests
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
         Assert.Equal(StatusCodes.Status500InternalServerError, objectResult.StatusCode);
+        repositoryMock.Received(1).UpdateById(Arg.Any<ToDoItem>());
     }
 }

@@ -17,7 +17,7 @@ public class ToDoItemsRepository : IRepository<ToDoItem>
         context.SaveChanges();
     }
 
-    public List<ToDoItem> Read()
+    public IEnumerable<ToDoItem> Read()
     {
         return context.ToDoItems.ToList();
     }

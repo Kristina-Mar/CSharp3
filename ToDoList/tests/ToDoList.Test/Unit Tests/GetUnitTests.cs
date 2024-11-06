@@ -4,6 +4,7 @@ namespace ToDoList.Test;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using NSubstitute.ReturnsExtensions;
 using ToDoList.Domain.DTOs;
 using ToDoList.Domain.Models;
@@ -13,7 +14,7 @@ using ToDoList.WebApi.Controllers;
 public class GetUnitTests
 {
     [Fact]
-    public void Get_AllItems_ReturnsAllItems()
+    public void Get_AllItemsWhenNotNull_ReturnsAllItems()
     {
         // Arrange
         var repositoryMock = Substitute.For<IRepository<ToDoItem>>();
@@ -66,6 +67,7 @@ public class GetUnitTests
         Assert.NotNull(value);
         Assert.Equal(allItemsExpected, resultResult.Value);
         Assert.Equal(2, value.Count);
+        repositoryMock.Received(1).Read();
     }
 
     [Fact]
@@ -82,6 +84,7 @@ public class GetUnitTests
 
         // Assert
         Assert.IsType<NotFoundResult>(result.Result);
+        repositoryMock.Received(1).Read();
     }
 
     [Fact]
@@ -91,7 +94,7 @@ public class GetUnitTests
         var repositoryMock = Substitute.For<IRepository<ToDoItem>>();
         var controller = new ToDoItemsController(repositoryMock);
 
-        repositoryMock.When(r => r.Read()).Do(r => throw new Exception());
+        repositoryMock.Read().Throws(new Exception());
 
         // Act
         var result = controller.Read();
@@ -99,6 +102,7 @@ public class GetUnitTests
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result.Result);
         Assert.Equal(StatusCodes.Status500InternalServerError, objectResult.StatusCode);
+        repositoryMock.Received(1).Read();
     }
 
     [Fact]
@@ -134,6 +138,7 @@ public class GetUnitTests
         var value = resultResult.Value as ToDoItemGetResponseDto;
         Assert.NotNull(value);
         Assert.Equal(expectedReturnedItem, value);
+        repositoryMock.Received(1).ReadById(Arg.Any<int>());
     }
 
     [Fact]
@@ -150,6 +155,7 @@ public class GetUnitTests
 
         // Assert
         Assert.IsType<NotFoundResult>(result.Result);
+        repositoryMock.Received(1).ReadById(Arg.Any<int>());
     }
 
     [Fact]
@@ -159,7 +165,8 @@ public class GetUnitTests
         var repositoryMock = Substitute.For<IRepository<ToDoItem>>();
         var controller = new ToDoItemsController(repositoryMock);
 
-        repositoryMock.When(r => r.ReadById(Arg.Any<int>())).Do(r => throw new Exception());
+        //repositoryMock.When(r => r.ReadById(Arg.Any<int>())).Do(r => throw new Exception()); alternative syntax
+        repositoryMock.ReadById(Arg.Any<int>()).Throws(new Exception());
 
         // Act
         var result = controller.ReadById(1);
@@ -167,5 +174,6 @@ public class GetUnitTests
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result.Result);
         Assert.Equal(StatusCodes.Status500InternalServerError, objectResult.StatusCode);
+        repositoryMock.Received(1).ReadById(Arg.Any<int>());
     }
 }

@@ -43,6 +43,7 @@ public class PostUnitTests
         Assert.Equal(toDoItemReturnedDtoExpected.Name, newItem.Name);
         Assert.Equal(toDoItemReturnedDtoExpected.Description, newItem.Description);
         Assert.Equal(toDoItemReturnedDtoExpected.IsCompleted, newItem.IsCompleted);
+        repositoryMock.Received(1).Create(Arg.Any<ToDoItem>());
     }
 
     [Fact]
@@ -53,7 +54,7 @@ public class PostUnitTests
         var controller = new ToDoItemsController(repositoryMock);
         var toDoItemDto = new ToDoItemCreateRequestDto("New item name", "New item description", false);
 
-        repositoryMock.When(r => r.Create(Arg.Any<ToDoItem>())).Do(r => throw new Exception());
+        repositoryMock.When(r => r.Create(Arg.Any<ToDoItem>())).Throws(new Exception());
 
         // Act
         var result = controller.Create(toDoItemDto);
@@ -61,5 +62,6 @@ public class PostUnitTests
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
         Assert.Equal(StatusCodes.Status500InternalServerError, objectResult.StatusCode);
+        repositoryMock.Received(1).Create(Arg.Any<ToDoItem>());
     }
 }

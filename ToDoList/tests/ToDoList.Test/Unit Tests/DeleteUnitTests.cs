@@ -23,6 +23,7 @@ public class DeleteUnitTests
 
         // Assert
         Assert.IsType<NoContentResult>(result);
+        repositoryMock.Received(1).DeleteById(Arg.Any<int>());
     }
 
     [Fact]
@@ -39,6 +40,7 @@ public class DeleteUnitTests
 
         // Assert
         Assert.IsType<NotFoundResult>(result);
+        repositoryMock.Received(1).DeleteById(Arg.Any<int>());
     }
 
     [Fact]
@@ -48,7 +50,7 @@ public class DeleteUnitTests
         var repositoryMock = Substitute.For<IRepository<ToDoItem>>();
         var controller = new ToDoItemsController(repositoryMock);
 
-        repositoryMock.When(r => r.DeleteById(Arg.Any<int>())).Do(r => throw new Exception());
+        repositoryMock.When(r => r.DeleteById(Arg.Any<int>())).Throws(new Exception());
 
         // Act
         var result = controller.DeleteById(1);
@@ -56,5 +58,6 @@ public class DeleteUnitTests
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
         Assert.Equal(StatusCodes.Status500InternalServerError, objectResult.StatusCode);
+        repositoryMock.Received(1).DeleteById(Arg.Any<int>());
     }
 }
