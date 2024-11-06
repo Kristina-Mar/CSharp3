@@ -19,7 +19,7 @@ public class PutUnitTests
 
         var updatedItem = new ToDoItemUpdateRequestDto("Updated name", "Updated description", true);
 
-        repositoryMock.UpdateById(Arg.Any<int>(), Arg.Any<ToDoItem>()).Returns(true);
+        repositoryMock.UpdateById(Arg.Any<ToDoItem>()).Returns(true);
 
         // Act
         var result = controller.UpdateById(1, updatedItem);
@@ -37,7 +37,7 @@ public class PutUnitTests
 
         var updatedItem = new ToDoItemUpdateRequestDto("Updated name", "Updated description", true);
 
-        repositoryMock.UpdateById(Arg.Any<int>(), Arg.Any<ToDoItem>()).Returns(false);
+        repositoryMock.UpdateById(Arg.Any<ToDoItem>()).Returns(false);
 
         // Act
         var result = controller.UpdateById(2, updatedItem);
@@ -55,7 +55,7 @@ public class PutUnitTests
 
         var updatedItem = new ToDoItemUpdateRequestDto("Updated name", "Updated description", true);
 
-        repositoryMock.When(r => r.UpdateById(Arg.Any<int>(), Arg.Any<ToDoItem>())).Do(r => throw new Exception());
+        repositoryMock.When(r => r.UpdateById(Arg.Any<ToDoItem>())).Do(r => throw new Exception());
 
         // Act
         var result = controller.UpdateById(1, updatedItem);
