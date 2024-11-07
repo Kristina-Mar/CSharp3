@@ -2,66 +2,53 @@ namespace ToDoList.Test;
 
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.DTOs;
-using ToDoList.Domain.Models;
 using ToDoList.Persistence;
+using ToDoList.Persistence.Repositories;
 using ToDoList.WebApi.Controllers;
 
 public class PutIntegrationTests
 {
-    /* [Fact]
-     public void Put_ValidId_UpdatesItem()
-     {
-         // Arrange
-         var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
-         var controller = new ToDoItemsController(context);
-         controller.items = [];
-         var toDoItem = new ToDoItem
-         {
-             ToDoItemId = 1,
-             Name = "Test name",
-             Description = "Test description",
-             IsCompleted = false
-         };
-         controller.items.Add(toDoItem);
+    [Fact]
+    public void Put_ValidId_UpdatesItem()
+    {
+        // Arrange
+        var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
+        var repository = new ToDoItemsRepository(context);
+        var controller = new ToDoItemsController(repository);
 
-         var updatedItem = new ToDoItemUpdateRequestDto("Updated name", "Updated description", true);
+        var toDoItemDto = new ToDoItemCreateRequestDto("New test item name", "New test item description", false);
+        controller.Create(toDoItemDto);
+        var newItemId = repository.Read().Max(i => i.ToDoItemId);
 
-         // Act
-         var result = controller.UpdateById(1, updatedItem);
-         var updatedItemInList = controller.items.Find(i => i.ToDoItemId == 1);
+        var updatedItem = new ToDoItemUpdateRequestDto("Updated name", "Updated description", true);
 
-         // Assert
-         Assert.IsType<NoContentResult>(result);
-         Assert.Equal(1, updatedItemInList.ToDoItemId);
-         Assert.Equal(updatedItem.Name, updatedItemInList.Name);
-         Assert.Equal(updatedItem.Description, updatedItemInList.Description);
-         Assert.Equal(updatedItem.IsCompleted, updatedItemInList.IsCompleted);
-     }
+        // Act
+        var result = controller.UpdateById(newItemId, updatedItem);
+        var updatedItemInList = repository.ReadById(newItemId);
 
-     [Fact]
-     public void Put_InvalidId_ReturnsNotFound()
-     {
-         // Arrange
-         var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
-         var controller = new ToDoItemsController(context);
-         controller.items = [];
-         var toDoItem = new ToDoItem
-         {
-             ToDoItemId = 1,
-             Name = "Test name",
-             Description = "Test description",
-             IsCompleted = false
-         };
-         controller.items.Add(toDoItem);
+        // Assert
+        Assert.IsType<NoContentResult>(result);
+        Assert.Equal(updatedItem.Name, updatedItemInList.Name);
+        Assert.Equal(updatedItem.Description, updatedItemInList.Description);
+        Assert.Equal(updatedItem.IsCompleted, updatedItemInList.IsCompleted);
+    }
 
-         var updatedItem = new ToDoItemUpdateRequestDto("Updated name", "Updated description", true);
+    [Fact]
+    public void Put_InvalidId_ReturnsNotFound()
+    {
+        // Arrange
+        var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
+        var repository = new ToDoItemsRepository(context);
+        var controller = new ToDoItemsController(repository);
 
-         // Act
-         var result = controller.UpdateById(2, updatedItem);
+        int invalidId = -1;
+        var updatedItem = new ToDoItemUpdateRequestDto("Updated name", "Updated description", true);
 
-         // Assert
-         Assert.IsType<NotFoundResult>(result);
-         Assert.DoesNotContain(controller.items, i => i.ToDoItemId == 2);
-         Assert.DoesNotContain(controller.items, i => i.Name == updatedItem.Name);
-     }*/
+        // Act
+        var result = controller.UpdateById(invalidId, updatedItem);
+
+        // Assert
+        Assert.IsType<NotFoundResult>(result);
+        Assert.Null(repository.ReadById(invalidId));
+    }
 }

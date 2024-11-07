@@ -1,43 +1,34 @@
 namespace ToDoList.Test;
 
 using Microsoft.AspNetCore.Mvc;
-using ToDoList.Domain.Models;
+using ToDoList.Domain.DTOs;
 using ToDoList.Persistence;
+using ToDoList.Persistence.Repositories;
 using ToDoList.WebApi.Controllers;
 
 public class DeleteIntegrationTests
 {
-   /* [Fact]
+    [Fact]
     public void Delete_ValiId_DeletesItem()
     {
         // Arrange
         var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
-        var controller = new ToDoItemsController(context);
-        controller.items = [];
-        var toDoItem = new ToDoItem
-        {
-            ToDoItemId = 1,
-            Name = "Test name",
-            Description = "Test description",
-            IsCompleted = false
-        };
-        var toDoItem2 = new ToDoItem
-        {
-            ToDoItemId = 2,
-            Name = "Test name",
-            Description = "Test description",
-            IsCompleted = false
-        };
-        controller.items.Add(toDoItem);
-        controller.items.Add(toDoItem2);
+        var repository = new ToDoItemsRepository(context);
+        var controller = new ToDoItemsController(repository);
+
+        var toDoItemDtoRequest = new ToDoItemCreateRequestDto("Test name", "Test description", false);
+        int expectedNumberOfItemsAfterDeleting = repository.Read().Count();
+
+        controller.Create(toDoItemDtoRequest);
+        var newItemId = repository.Read().Max(i => i.ToDoItemId);
 
         // Act
-        var result = controller.DeleteById(2);
+        var result = controller.DeleteById(newItemId);
 
         // Assert
         Assert.IsType<NoContentResult>(result);
-        Assert.DoesNotContain(controller.items, i => i.ToDoItemId == 2);
-        Assert.Single(controller.items);
+        Assert.Null(repository.ReadById(newItemId));
+        Assert.Equal(expectedNumberOfItemsAfterDeleting, repository.Read().Count());
     }
 
     [Fact]
@@ -45,23 +36,15 @@ public class DeleteIntegrationTests
     {
         // Arrange
         var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
-        var controller = new ToDoItemsController(context);
-        controller.items = [];
-        var toDoItem = new ToDoItem
-        {
-            ToDoItemId = 1,
-            Name = "Test name",
-            Description = "Test description",
-            IsCompleted = false
-        };
-        controller.items.Add(toDoItem);
+        var repository = new ToDoItemsRepository(context);
+        var controller = new ToDoItemsController(repository);
+        var invalidId = -1;
 
         // Act
-        var result = controller.DeleteById(2);
+        var result = controller.DeleteById(invalidId);
 
         // Assert
         Assert.IsType<NotFoundResult>(result);
-        Assert.DoesNotContain(controller.items, i => i.ToDoItemId == 2);
-        Assert.Single(controller.items);
-    }*/
+        Assert.Null(repository.ReadById(invalidId));
+    }
 }

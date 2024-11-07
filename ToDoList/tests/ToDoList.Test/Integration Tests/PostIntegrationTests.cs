@@ -8,11 +8,11 @@ using ToDoList.WebApi.Controllers;
 
 public class PostIntegrationTests
 {
-   /* [Fact]
+    [Fact]
     public void Post_NewItem_CreatesItem()
     {
         // Arrange
-        var context = new ToDoItemsContext();
+        var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
         var repository = new ToDoItemsRepository(context);
         var controller = new ToDoItemsController(repository);
 
@@ -22,14 +22,15 @@ public class PostIntegrationTests
         var result = controller.Create(toDoItemDto);
 
         // Assert
-        var resultResult = Assert.IsType<CreatedAtActionResult>(result).Value;
-        var newItem = resultResult as ToDoItemGetResponseDto;
+        var resultResult = Assert.IsType<CreatedAtActionResult>(result).Value as ToDoItemGetResponseDto;
 
-        Assert.Equal(toDoItemDto.Name, newItem.Name);
-        Assert.Equal(toDoItemDto.Description, newItem.Description);
-        Assert.Equal(toDoItemDto.IsCompleted, newItem.IsCompleted);
+        var newItemId = repository.Read().Max(i => i.ToDoItemId);
+        var newItemInDb = repository.ReadById(newItemId);
 
-        Assert.NotNull(context.ToDoItems.First(i => i.Name == toDoItemDto.Name));
-        Assert.Equal(context.ToDoItems.Max(o => o.ToDoItemId), newItem.ToDoItemId);
-    }*/
+        Assert.Equal(toDoItemDto.Name, newItemInDb.Name);
+        Assert.Equal(toDoItemDto.Description, newItemInDb.Description);
+        Assert.Equal(toDoItemDto.IsCompleted, newItemInDb.IsCompleted);
+
+        Assert.Equal(newItemId, resultResult.ToDoItemId);
+    }
 }
