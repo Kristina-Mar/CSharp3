@@ -2,6 +2,7 @@ namespace ToDoList.Test;
 
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.DTOs;
+using ToDoList.Domain.Models;
 using ToDoList.Persistence;
 using ToDoList.Persistence.Repositories;
 using ToDoList.WebApi.Controllers;
@@ -16,15 +17,20 @@ public class PutIntegrationTests
         var repository = new ToDoItemsRepository(context);
         var controller = new ToDoItemsController(repository);
 
-        var toDoItemDto = new ToDoItemCreateRequestDto("New test item name", "New test item description", false);
-        controller.Create(toDoItemDto);
-        var newItemId = repository.Read().Max(i => i.ToDoItemId);
+        var toDoItem = new ToDoItem()
+        {
+            Name = "Put test name",
+            Description = "Put test description",
+            IsCompleted = false
+        };
+        context.Add(toDoItem);
+        context.SaveChanges();
 
         var updatedItem = new ToDoItemUpdateRequestDto("Updated name", "Updated description", true);
 
         // Act
-        var result = controller.UpdateById(newItemId, updatedItem);
-        var updatedItemInList = repository.ReadById(newItemId);
+        var result = controller.UpdateById(toDoItem.ToDoItemId, updatedItem);
+        var updatedItemInList = repository.ReadById(toDoItem.ToDoItemId);
 
         // Assert
         Assert.IsType<NoContentResult>(result);

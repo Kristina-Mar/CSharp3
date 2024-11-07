@@ -1,7 +1,6 @@
 namespace ToDoList.Test;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.DTOs;
-using ToDoList.Domain.Models;
 using ToDoList.Persistence;
 using ToDoList.Persistence.Repositories;
 using ToDoList.WebApi.Controllers;
@@ -16,10 +15,10 @@ public class PostIntegrationTests
         var repository = new ToDoItemsRepository(context);
         var controller = new ToDoItemsController(repository);
 
-        var toDoItemDto = new ToDoItemCreateRequestDto("New test item name", "New test item description", false);
+        var toDoItemRequest = new ToDoItemCreateRequestDto("New test item name", "New test item description", false);
 
         // Act
-        var result = controller.Create(toDoItemDto);
+        var result = controller.Create(toDoItemRequest);
 
         // Assert
         var resultResult = Assert.IsType<CreatedAtActionResult>(result).Value as ToDoItemGetResponseDto;
@@ -27,9 +26,9 @@ public class PostIntegrationTests
         var newItemId = repository.Read().Max(i => i.ToDoItemId);
         var newItemInDb = repository.ReadById(newItemId);
 
-        Assert.Equal(toDoItemDto.Name, newItemInDb.Name);
-        Assert.Equal(toDoItemDto.Description, newItemInDb.Description);
-        Assert.Equal(toDoItemDto.IsCompleted, newItemInDb.IsCompleted);
+        Assert.Equal(toDoItemRequest.Name, newItemInDb.Name);
+        Assert.Equal(toDoItemRequest.Description, newItemInDb.Description);
+        Assert.Equal(toDoItemRequest.IsCompleted, newItemInDb.IsCompleted);
 
         Assert.Equal(newItemId, resultResult.ToDoItemId);
     }

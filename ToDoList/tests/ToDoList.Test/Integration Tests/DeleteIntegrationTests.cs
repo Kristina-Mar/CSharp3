@@ -1,7 +1,7 @@
 namespace ToDoList.Test;
 
 using Microsoft.AspNetCore.Mvc;
-using ToDoList.Domain.DTOs;
+using ToDoList.Domain.Models;
 using ToDoList.Persistence;
 using ToDoList.Persistence.Repositories;
 using ToDoList.WebApi.Controllers;
@@ -16,18 +16,23 @@ public class DeleteIntegrationTests
         var repository = new ToDoItemsRepository(context);
         var controller = new ToDoItemsController(repository);
 
-        var toDoItemDtoRequest = new ToDoItemCreateRequestDto("Test name", "Test description", false);
+        var toDoItem = new ToDoItem()
+        {
+            Name = "Delete test name",
+            Description = "Delete test description",
+            IsCompleted = false
+        };
         int expectedNumberOfItemsAfterDeleting = repository.Read().Count();
 
-        controller.Create(toDoItemDtoRequest);
-        var newItemId = repository.Read().Max(i => i.ToDoItemId);
+        context.Add(toDoItem);
+        context.SaveChanges();
 
         // Act
-        var result = controller.DeleteById(newItemId);
+        var result = controller.DeleteById(toDoItem.ToDoItemId);
 
         // Assert
         Assert.IsType<NoContentResult>(result);
-        Assert.Null(repository.ReadById(newItemId));
+        Assert.Null(repository.ReadById(toDoItem.ToDoItemId));
         Assert.Equal(expectedNumberOfItemsAfterDeleting, repository.Read().Count());
     }
 
