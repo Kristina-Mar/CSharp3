@@ -14,7 +14,7 @@ using ToDoList.WebApi.Controllers;
 public class GetUnitTests
 {
     [Fact]
-    public void Get_AllItemsWhenNotNull_ReturnsAllItems()
+    public void Get_ReadWhenSomeItemAvailable_ReturnsOk()
     {
         // Arrange
         var repositoryMock = Substitute.For<IRepository<ToDoItem>>();
@@ -71,7 +71,7 @@ public class GetUnitTests
     }
 
     [Fact]
-    public void Get_AllItemsWhenNull_ReturnsNotFound()
+    public void Get_ReadWhenNoItemAvailable_ReturnsNotFound()
     {
         // Arrange
         var repositoryMock = Substitute.For<IRepository<ToDoItem>>();
@@ -88,7 +88,7 @@ public class GetUnitTests
     }
 
     [Fact]
-    public void Get_AllItemsUnhandledException_Returns500()
+    public void Get_ReadUnhandledException_ReturnsInternalServerError()
     {
         // Arrange
         var repositoryMock = Substitute.For<IRepository<ToDoItem>>();
@@ -106,7 +106,7 @@ public class GetUnitTests
     }
 
     [Fact]
-    public void Get_ValidId_ReturnsItem()
+    public void Get_ReadByIdWhenSomeItemAvailable_ReturnsOk()
     {
         // Arrange
         var repositoryMock = Substitute.For<IRepository<ToDoItem>>();
@@ -142,7 +142,7 @@ public class GetUnitTests
     }
 
     [Fact]
-    public void Get_InvalidId_ReturnsNotFound()
+    public void Get_ReadByIdWhenItemIsNull_ReturnsNotFound()
     {
         // Arrange
         var repositoryMock = Substitute.For<IRepository<ToDoItem>>();
@@ -159,7 +159,7 @@ public class GetUnitTests
     }
 
     [Fact]
-    public void Get_ItemByIdUnhandledException_Returns500()
+    public void Get_ReadByIdUnhandledException_ReturnsInternalServerError()
     {
         // Arrange
         var repositoryMock = Substitute.For<IRepository<ToDoItem>>();

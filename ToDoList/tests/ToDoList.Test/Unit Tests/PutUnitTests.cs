@@ -11,7 +11,7 @@ using ToDoList.WebApi.Controllers;
 public class PutUnitTests
 {
     [Fact]
-    public void Put_ValidId_UpdatesItem()
+    public void Put_UpdateByIdWhenItemUpdated_ReturnsNoContent()
     {
         // Arrange
         var repositoryMock = Substitute.For<IRepository<ToDoItem>>();
@@ -30,7 +30,7 @@ public class PutUnitTests
     }
 
     [Fact]
-    public void Put_InvalidId_ReturnsNotFound()
+    public void Put_UpdateByIdWhenIdNotFound_ReturnsNotFound()
     {
         // Arrange
         var repositoryMock = Substitute.For<IRepository<ToDoItem>>();
@@ -49,7 +49,7 @@ public class PutUnitTests
     }
 
     [Fact]
-    public void Put_UnhandledException_Returns500()
+    public void Put_UpdateByIdUnhandledException_ReturnsInternalServerError()
     {
         // Arrange
         var repositoryMock = Substitute.For<IRepository<ToDoItem>>();

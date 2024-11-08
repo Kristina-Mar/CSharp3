@@ -10,7 +10,7 @@ using ToDoList.WebApi.Controllers;
 public class PutIntegrationTests
 {
     [Fact]
-    public void Put_ValidId_UpdatesItem()
+    public void Put_UpdateByIdWhenItemUpdated_ReturnsNoContentAndUpdatesItem()
     {
         // Arrange
         var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
@@ -40,7 +40,7 @@ public class PutIntegrationTests
     }
 
     [Fact]
-    public void Put_InvalidId_ReturnsNotFound()
+    public void Put_UpdateByIdWhenIdNotFound_ReturnsNotFound()
     {
         // Arrange
         var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");

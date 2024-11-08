@@ -9,7 +9,7 @@ using ToDoList.WebApi.Controllers;
 public class DeleteIntegrationTests
 {
     [Fact]
-    public void Delete_ValiId_DeletesItem()
+    public void Delete_DeleteByIdValidItemId_ReturnsNoContentAndDeletesItem()
     {
         // Arrange
         var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
@@ -37,7 +37,7 @@ public class DeleteIntegrationTests
     }
 
     [Fact]
-    public void Delete_InvalidId_ReturnsNotFound()
+    public void Delete_DeleteByIdInvalidItemId_ReturnsNotFound()
     {
         // Arrange
         var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");

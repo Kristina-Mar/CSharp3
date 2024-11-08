@@ -10,7 +10,7 @@ using ToDoList.WebApi.Controllers;
 public class DeleteUnitTests
 {
     [Fact]
-    public void Delete_ValiId_DeletesItem()
+    public void Delete_DeleteByIdValidItemId_ReturnsNoContent()
     {
         // Arrange
         var repositoryMock = Substitute.For<IRepository<ToDoItem>>();
@@ -27,7 +27,7 @@ public class DeleteUnitTests
     }
 
     [Fact]
-    public void Delete_InvalidId_ReturnsNotFound()
+    public void Delete_DeleteByIdInvalidItemId_ReturnsNotFound()
     {
         // Arrange
         var repositoryMock = Substitute.For<IRepository<ToDoItem>>();
@@ -44,7 +44,7 @@ public class DeleteUnitTests
     }
 
     [Fact]
-    public void Delete_UnhandledException_Returns500()
+    public void Delete_DeleteByIdUnhandledException_ReturnsInternalServerError()
     {
         // Arrange
         var repositoryMock = Substitute.For<IRepository<ToDoItem>>();

@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Http;
 public class PostUnitTests
 {
     [Fact]
-    public void Post_ValidRequest_CreatesItem()
+    public void Post_CreateValidRequest_ReturnsCreatedAtAction()
     {
         // Arrange
         var repositoryMock = Substitute.For<IRepository<ToDoItem>>();
@@ -47,7 +47,7 @@ public class PostUnitTests
     }
 
     [Fact]
-    public void Post_UnhandledException_Returns500()
+    public void Post_CreateUnhandledException_ReturnsInternalServerError()
     {
         // Arrange
         var repositoryMock = Substitute.For<IRepository<ToDoItem>>();

@@ -8,7 +8,7 @@ using ToDoList.WebApi.Controllers;
 public class PostIntegrationTests
 {
     [Fact]
-    public void Post_NewItem_CreatesItem()
+    public void Post_CreateValidRequest_ReturnsCreatedAtActionAndCreatesItem()
     {
         // Arrange
         var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");

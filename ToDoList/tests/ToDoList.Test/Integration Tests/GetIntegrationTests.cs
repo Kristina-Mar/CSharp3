@@ -11,7 +11,7 @@ using ToDoList.WebApi.Controllers;
 public class GetIntegrationTests
 {
     [Fact]
-    public void Get_AllItems_ReturnsAllItems()
+    public void Get_ReadWhenSomeItemAvailable_ReturnsOkAndAllItems()
     {
         // Arrange
         var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
@@ -44,7 +44,7 @@ public class GetIntegrationTests
     }
 
     [Fact]
-    public void Get_ValidId_ReturnsItem()
+    public void Get_ReadByIdWhenSomeItemAvailable_ReturnsOkAndItem()
     {
         // Arrange
         var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
@@ -73,7 +73,7 @@ public class GetIntegrationTests
     }
 
     [Fact]
-    public void Get_InvalidId_ReturnsNotFound()
+    public void Get_ReadByIdWhenItemIsNull_ReturnsNotFound()
     {
         // Arrange
         var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
