@@ -6,6 +6,7 @@ using ToDoList.WebApi.Controllers;
 using ToDoList.Domain.Models;
 using ToDoList.Persistence.Repositories;
 using Microsoft.AspNetCore.Http;
+using FluentAssertions;
 
 public class PostUnitTests
 {
@@ -44,6 +45,9 @@ public class PostUnitTests
         Assert.Equal(toDoItemReturnedDtoExpected.Description, newItem.Description);
         Assert.Equal(toDoItemReturnedDtoExpected.IsCompleted, newItem.IsCompleted);
         repositoryMock.Received(1).Create(Arg.Any<ToDoItem>());
+
+        // FluentAssertions alternative
+        toDoItemReturnedDtoExpected.ToDoItemId.Should().Be(newItem.ToDoItemId);
     }
 
     [Fact]

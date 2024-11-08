@@ -3,6 +3,7 @@ namespace ToDoList.Test;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
+using FluentAssertions;
 using ToDoList.Domain.Models;
 using ToDoList.Persistence.Repositories;
 using ToDoList.WebApi.Controllers;
@@ -24,6 +25,8 @@ public class DeleteUnitTests
         // Assert
         Assert.IsType<NoContentResult>(result);
         repositoryMock.Received(1).DeleteById(Arg.Any<int>());
+
+        result.Should().BeOfType<NoContentResult>(); // FluentAssertions alternative
     }
 
     [Fact]
@@ -41,6 +44,8 @@ public class DeleteUnitTests
         // Assert
         Assert.IsType<NotFoundResult>(result);
         repositoryMock.Received(1).DeleteById(Arg.Any<int>());
+
+        result.Should().BeOfType<NotFoundResult>(); // FluentAssertions alternative
     }
 
     [Fact]
@@ -59,5 +64,7 @@ public class DeleteUnitTests
         var objectResult = Assert.IsType<ObjectResult>(result);
         Assert.Equal(StatusCodes.Status500InternalServerError, objectResult.StatusCode);
         repositoryMock.Received(1).DeleteById(Arg.Any<int>());
+
+        result.Should().BeOfType<ObjectResult>().Which.StatusCode.Should().Be(500); // FluentAssertions alternative
     }
 }

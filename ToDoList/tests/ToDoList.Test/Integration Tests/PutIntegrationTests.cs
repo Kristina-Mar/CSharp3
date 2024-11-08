@@ -1,5 +1,6 @@
 namespace ToDoList.Test;
 
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.DTOs;
 using ToDoList.Domain.Models;
@@ -37,6 +38,10 @@ public class PutIntegrationTests
         Assert.Equal(updatedItem.Name, updatedItemInList.Name);
         Assert.Equal(updatedItem.Description, updatedItemInList.Description);
         Assert.Equal(updatedItem.IsCompleted, updatedItemInList.IsCompleted);
+
+        // FluentAssertions alternative
+        updatedItemInList.Name.Should().NotBe("Put test name");
+        updatedItemInList.Description.Should().Be(updatedItem.Description);
     }
 
     [Fact]

@@ -5,6 +5,7 @@ using ToDoList.Domain.Models;
 using ToDoList.Persistence;
 using ToDoList.Persistence.Repositories;
 using ToDoList.WebApi.Controllers;
+using FluentAssertions;
 
 public class DeleteIntegrationTests
 {
@@ -34,6 +35,11 @@ public class DeleteIntegrationTests
         Assert.IsType<NoContentResult>(result);
         Assert.Null(repository.ReadById(toDoItem.ToDoItemId));
         Assert.Equal(expectedNumberOfItemsAfterDeleting, repository.Read().Count());
+
+        // FluentAssertions alternatives
+        repository.ReadById(toDoItem.ToDoItemId).Should().BeNull();
+        repository.Read().Should().NotContain(i => i.ToDoItemId == toDoItem.ToDoItemId);
+        repository.Read().Count().Should().Be(expectedNumberOfItemsAfterDeleting);
     }
 
     [Fact]
