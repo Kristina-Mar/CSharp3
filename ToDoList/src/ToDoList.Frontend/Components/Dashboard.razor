@@ -1,0 +1,59 @@
+﻿@rendermode InteractiveServer
+
+<style>
+    th{
+        background-color: forestgreen ;
+        color: white;
+        }
+</style>
+
+<h1>Dashboard</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Název</th>
+            <th>Popis</th>
+            <th>Splněno</th>
+        </tr>
+    </thead>
+    @foreach (var toDoItem in toDoItems)
+    {
+        <tr>
+           <td>@toDoItem.ToDoItemId</td>
+           <td>@toDoItem.Name</td>
+           <td>@toDoItem.Description</td>
+           <td>@(toDoItem.IsCompleted ? "Ano" : "Ne")</td>
+        </tr>
+    }
+</table>
+<br>
+<button @onclick="OrderItemsById">Seřadit podle ID</button>
+<button @onclick="OrderItemsByName">Seřadit podle názvu</button>
+
+@code
+{
+    private List<ToDoItemView> toDoItems =
+        [
+        new ToDoItemView() {ToDoItemId = 2, Name = "Udělat úkol na Czechitas", IsCompleted = false},
+        new ToDoItemView() {ToDoItemId = 1, Name = "Udělat nepovinný úkol na Czechitas", IsCompleted = false},
+                new ToDoItemView() {ToDoItemId = 3, Name = "Nakoupit", IsCompleted = true}
+        ];
+
+    private void OrderItemsById()
+    {
+        toDoItems = toDoItems.OrderBy(i => i.ToDoItemId).ToList();
+    }
+    private void OrderItemsByName()
+    {
+        toDoItems = toDoItems.OrderBy(i => i.Name).ToList();
+    }
+    public class ToDoItemView
+    {
+        public int ToDoItemId { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public bool IsCompleted { get; set; }
+    }
+}

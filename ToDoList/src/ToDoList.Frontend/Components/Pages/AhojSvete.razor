@@ -1,0 +1,17 @@
+﻿@page "/ahojSvete"
+
+<PageTitle>Ahoj světe!</PageTitle>
+
+<h1>@ahojSveteFunc()</h1>
+
+<p class="paragraph">Vítej v mé <b>aplikaci</b>.</p>
+<p>Vítej v mé <i>aplikaci</i>.</p>
+
+@code
+{
+    string ahojSvete = "Ahoj, světe, z jiné stránky a z metody!";
+    public string ahojSveteFunc()
+    {
+        return ahojSvete;
+    }
+}
