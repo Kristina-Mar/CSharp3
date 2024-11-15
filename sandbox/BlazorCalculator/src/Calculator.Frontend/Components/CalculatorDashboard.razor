@@ -1,0 +1,175 @@
+﻿@using Calculator.Backend
+@rendermode InteractiveServer
+
+<style>
+    button {
+        width: 50px;
+        height: 30px;
+    }
+</style>
+
+<table>
+    <tr>
+        <td style="border: solid black;
+        width:208px;
+        height:25px;
+        text-align: right;">@CalculationsDisplay</td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <td style="border: solid black;
+        width:208px;
+        height:35px;
+        text-align: right;">@CalculatorDisplay</td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <td colspan="2"><button style="width:104px" @onclick="Reset">Clear</button></td>
+        <td><button @onclick="Backspace">←</button></td>
+        <td><button @onclick="@(() => SetOperator("^"))">x^y</button></td>
+    </tr>
+    <tr>
+        <td><button @onclick="() => AddDigitFromButton(7)">7</button></td>
+        <td><button @onclick="() => AddDigitFromButton(8)">8</button></td>
+        <td><button @onclick="() => AddDigitFromButton(9)">9</button></td>
+        <td><button @onclick="@(() => SetOperator("÷"))">÷</button></td>
+    </tr>
+    <tr>
+        <td><button @onclick="() => AddDigitFromButton(4)">4</button></td>
+        <td><button @onclick="() => AddDigitFromButton(5)">5</button></td>
+        <td><button @onclick="() => AddDigitFromButton(6)">6</button></td>
+        <td><button @onclick="@(() => SetOperator("*"))">*</button></td>
+    </tr>
+    <tr>
+        <td><button @onclick="() => AddDigitFromButton(1)">1</button></td>
+        <td><button @onclick="() => AddDigitFromButton(2)">2</button></td>
+        <td><button @onclick="() => AddDigitFromButton(3)">3</button></td>
+        <td><button @onclick="@(() => SetOperator("-"))">-</button></td>
+    </tr>
+    <tr>
+        <td><button @onclick="DecimalClick">,</button></td>
+        <td><button @onclick="() => AddDigitFromButton(0)">0</button></td>
+        <td><button @onclick="Calculate">=</button></td>
+        <td><button @onclick="@(() => SetOperator("+"))">+</button></td>
+    </tr>
+</table>
+
+@code
+{
+    Calculations calculations = new Calculations();
+    private bool inputtingNewNumber = true;
+    private string symbol = string.Empty;
+    private double secondNumber;
+    public string CalculatorDisplay = "0";
+    public string CalculationsDisplay = string.Empty;
+
+    private void AddDigitFromButton(int digit)
+    {
+        if (inputtingNewNumber || CalculatorDisplay == "0")
+        {
+            CalculatorDisplay = string.Empty;
+            inputtingNewNumber = false;
+        }
+        CalculatorDisplay += digit;
+    }
+
+    private void DecimalClick()
+    {
+        if (inputtingNewNumber || CalculatorDisplay == "0") // Different from numerals -> can begin with 0.
+        {
+            CalculatorDisplay = "0,";
+            inputtingNewNumber = false;
+        }
+        else if (!CalculatorDisplay.Contains(",")) // Only one decimal point permitted in a number.
+        {
+            CalculatorDisplay += ",";
+        }
+    }
+    private void SetOperator(string inputSymbol)
+    {
+        if (!inputtingNewNumber && symbol == string.Empty) // First pressing of mathematical symbol -> saves the first number and the symbol.
+        {
+            calculations.SetFirstNumber(double.Parse(CalculatorDisplay));
+            symbol = inputSymbol;
+            CalculationsDisplay = calculations.Result + " " + symbol;
+            inputtingNewNumber = true;
+        }
+
+        else if (!inputtingNewNumber) // Not the first pressing of a mathematical symbol button and the second number has been input -> calculation.
+        {
+            secondNumber = double.Parse(CalculatorDisplay);
+
+            if (symbol == "÷" && secondNumber == 0)
+            {
+                Reset();
+                CalculatorDisplay = "You cannot divide by 0!"; // Reset and a warning.
+            }
+            else
+            {
+                calculations.Calculate(symbol, secondNumber);
+                CalculatorDisplay = calculations.Result.ToString();
+                symbol = inputSymbol;
+                CalculationsDisplay = calculations.Result + " " + symbol;
+                inputtingNewNumber = true;
+            }
+        }
+
+        else // Not the first pressing of a mathematical symbol button and the second number has not been input -> changes the mathematical symbol.
+        {
+            symbol = inputSymbol;
+            CalculationsDisplay = calculations.Result + " " + symbol;
+            inputtingNewNumber = true;
+        }
+    }
+    private void Reset() // Complete reset.
+    {
+        CalculatorDisplay = "0";
+        CalculationsDisplay = string.Empty;
+        inputtingNewNumber = true;
+        calculations.Result = 0;
+        symbol = string.Empty;
+        secondNumber = 0;
+    }
+
+    private void Calculate()
+    {
+        if (!inputtingNewNumber) // Parses a new second number if it has been input.
+            // Repeated pressing of = -> the second number stays the same and the calculation repeats.
+        {
+            secondNumber = double.Parse(CalculatorDisplay);
+        }
+        CalculationsDisplay = calculations.Result + " " + symbol + " " + secondNumber + " =";
+        if (symbol == "÷" && secondNumber == 0)
+        {
+            Reset();
+            CalculatorDisplay = "You cannot divide by 0!"; // Reset and a warning.
+        }
+        else
+        {
+            calculations.Calculate(symbol, secondNumber);
+            CalculatorDisplay = calculations.Result.ToString();
+            inputtingNewNumber = true;
+        }
+    }
+
+    private void Backspace()
+    {
+        if (!inputtingNewNumber && CalculatorDisplay.Length >1)
+            // Only possible to delete user's input, not the result.
+        {
+            CalculatorDisplay = CalculatorDisplay.Remove(CalculatorDisplay.Length - 1);
+        }
+        else if (!inputtingNewNumber)
+        {
+            CalculatorDisplay = "0";
+        }
+        else
+        {
+            CalculatorDisplay = string.Empty;
+        }
+    }
+}
