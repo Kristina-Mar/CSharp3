@@ -2,9 +2,12 @@
 
 <style>
     th{
-        background-color: forestgreen ;
+        background-color: #228b22 ;
         color: white;
-        }
+        font-family: Arial, Helvetica, sans-serif;
+        text-align: left; }
+    tr:nth-child(even) {
+  background-color: #ddf7dd;}
 </style>
 
 <h1>Dashboard</h1>
@@ -12,10 +15,24 @@
 <table>
     <thead>
         <tr>
-            <th>Id</th>
-            <th>Název</th>
-            <th>Popis</th>
-            <th>Splněno</th>
+            <th style="width:10%"><button style="background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: white;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 16px;" @onclick="OrderItemsById">Id</button>▾</th>
+            <th style="width:35%"><button style="background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: white;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 16px;" @onclick="OrderItemsByName">Name</button>▾</th>
+            <th style="width:45%">Description</th>
+            <th style="width:10%">Completed?</th>
         </tr>
     </thead>
     @foreach (var toDoItem in toDoItems)
@@ -24,21 +41,21 @@
            <td>@toDoItem.ToDoItemId</td>
            <td>@toDoItem.Name</td>
            <td>@toDoItem.Description</td>
-           <td>@(toDoItem.IsCompleted ? "Ano" : "Ne")</td>
+           <td>@(toDoItem.IsCompleted ? "Yes" : "No")</td>
         </tr>
     }
 </table>
 <br>
-<button @onclick="OrderItemsById">Seřadit podle ID</button>
-<button @onclick="OrderItemsByName">Seřadit podle názvu</button>
+<button @onclick="OrderItemsById">Order by ID</button>
+<button @onclick="OrderItemsByName">Order by name</button>
 
 @code
 {
     private List<ToDoItemView> toDoItems =
         [
-        new ToDoItemView() {ToDoItemId = 2, Name = "Udělat úkol na Czechitas", IsCompleted = false},
-        new ToDoItemView() {ToDoItemId = 1, Name = "Udělat nepovinný úkol na Czechitas", IsCompleted = false},
-                new ToDoItemView() {ToDoItemId = 3, Name = "Nakoupit", IsCompleted = true}
+        new ToDoItemView() {ToDoItemId = 2, Name = "Complete Czechitas assignment", Description = "To do list frontend", IsCompleted = false},
+        new ToDoItemView() {ToDoItemId = 1, Name = "Complete Czechitas optional assignment", Description = "Calculator frontend", IsCompleted = false},
+                new ToDoItemView() {ToDoItemId = 3, Name = "Additional homework reading", Description = "Reading list for week 2", IsCompleted = true}
         ];
 
     private void OrderItemsById()
