@@ -3,32 +3,37 @@
 
 <style>
     button {
-        width: 50px;
-        height: 30px;
+        width: 60px;
+        height: 45px;
+        font-size: medium;
+    }
+    table {
+        border: 3px solid black;
+        padding: 5px;
+        background-color: cornflowerblue;
+        font-family: Arial, Helvetica, sans-serif;
     }
 </style>
 
 <table>
     <tr>
-        <td style="border: solid black;
-        width:208px;
-        height:25px;
-        text-align: right;">@CalculationsDisplay</td>
-    </tr>
-</table>
-
-<table>
-    <tr>
-        <td style="border: solid black;
-        width:208px;
+        <td colspan="4"
+        style="border: 2px solid black;
+        text-align: right;
         height:35px;
-        text-align: right;">@CalculatorDisplay</td>
+        background-color: whitesmoke;
+        font-size:large;">@CalculationsDisplay</td>
     </tr>
-</table>
-
-<table>
     <tr>
-        <td colspan="2"><button style="width:104px" @onclick="Reset">Clear</button></td>
+        <td colspan="4"
+        style="border: 2px solid black;
+        text-align: right;
+        height:50px;
+        background-color: white;
+        font-size:xx-large;">@CalculatorDisplay</td>
+    </tr>
+    <tr>
+        <td colspan="2"><button style="width:100%;" @onclick="Reset">Clear</button></td>
         <td><button @onclick="Backspace">←</button></td>
         <td><button @onclick="@(() => SetOperator("^"))">x^y</button></td>
     </tr>
