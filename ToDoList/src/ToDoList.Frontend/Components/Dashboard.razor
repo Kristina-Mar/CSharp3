@@ -1,4 +1,7 @@
-﻿@rendermode InteractiveServer
+﻿@using ToDoList.Frontend.Views
+@using ToDoList.Frontend.Clients
+@inject IToDoItemsClient ToDoItemsClient
+@rendermode InteractiveServer
 
 <style>
     th{
@@ -35,15 +38,25 @@
             <th style="width:10%">Completed?</th>
         </tr>
     </thead>
-    @foreach (var toDoItem in toDoItems)
+
+    @if (toDoItems != null)
     {
+        <p>Načítám...</p>
+    }
+
+    @if (toDoItems != null)
+    {
+    @foreach (var toDoItem in toDoItems)
+        {
         <tr>
            <td>@toDoItem.ToDoItemId</td>
            <td>@toDoItem.Name</td>
            <td>@toDoItem.Description</td>
            <td>@(toDoItem.IsCompleted ? "Yes" : "No")</td>
         </tr>
+        }
     }
+
 </table>
 <br>
 <button @onclick="OrderItemsById">Order by ID</button>
@@ -51,26 +64,19 @@
 
 @code
 {
-    private List<ToDoItemView> toDoItems =
-        [
-        new ToDoItemView() {ToDoItemId = 2, Name = "Complete Czechitas assignment", Description = "To do list frontend", IsCompleted = false},
-        new ToDoItemView() {ToDoItemId = 1, Name = "Complete Czechitas optional assignment", Description = "Calculator frontend", IsCompleted = false},
-                new ToDoItemView() {ToDoItemId = 3, Name = "Additional homework reading", Description = "Reading list for week 2", IsCompleted = true}
-        ];
+    protected override async Task OnInitializedAsync()
+    {
+        toDoItems = await ToDoItemsClient.ReadItemsAsync();
+    }
+
+    private List<ToDoItemView>? toDoItems = [];
 
     private void OrderItemsById()
     {
-        toDoItems = toDoItems.OrderBy(i => i.ToDoItemId).ToList();
+        toDoItems = toDoItems?.OrderBy(i => i.ToDoItemId).ToList();
     }
     private void OrderItemsByName()
     {
-        toDoItems = toDoItems.OrderBy(i => i.Name).ToList();
-    }
-    public class ToDoItemView
-    {
-        public int ToDoItemId { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public bool IsCompleted { get; set; }
+        toDoItems = toDoItems?.OrderBy(i => i.Name).ToList();
     }
 }
