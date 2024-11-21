@@ -8,7 +8,7 @@ using ToDoList.WebApi.Controllers;
 public class PostIntegrationTests
 {
     [Fact]
-    public void Post_CreateValidRequest_ReturnsCreatedAtActionAndCreatesItem()
+    public async Task Post_CreateValidRequest_ReturnsCreatedAtActionAndCreatesItem()
     {
         // Arrange
         var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
@@ -18,13 +18,13 @@ public class PostIntegrationTests
         var toDoItemRequest = new ToDoItemCreateRequestDto("New test item name", "New test item description", false);
 
         // Act
-        var result = controller.Create(toDoItemRequest);
+        var result = await controller.CreateAsync(toDoItemRequest);
 
         // Assert
         var resultResult = Assert.IsType<CreatedAtActionResult>(result).Value as ToDoItemGetResponseDto;
 
-        var newItemId = repository.Read().Max(i => i.ToDoItemId);
-        var newItemInDb = repository.ReadById(newItemId);
+        var newItemId = (await repository.ReadAsync()).Max(i => i.ToDoItemId);
+        var newItemInDb = await repository.ReadByIdAsync(newItemId);
 
         Assert.Equal(toDoItemRequest.Name, newItemInDb.Name);
         Assert.Equal(toDoItemRequest.Description, newItemInDb.Description);

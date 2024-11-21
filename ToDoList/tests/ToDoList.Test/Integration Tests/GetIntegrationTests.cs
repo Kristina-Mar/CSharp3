@@ -11,7 +11,7 @@ using ToDoList.WebApi.Controllers;
 public class GetIntegrationTests
 {
     [Fact]
-    public void Get_ReadWhenSomeItemAvailable_ReturnsOkAndAllItems()
+    public async Task Get_ReadWhenSomeItemAvailable_ReturnsOkAndAllItems()
     {
         // Arrange
         var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
@@ -28,7 +28,7 @@ public class GetIntegrationTests
         context.SaveChanges();
 
         // Act
-        var result = controller.Read();
+        var result = await controller.ReadAsync();
 
         // Assert
         var resultResult = Assert.IsType<OkObjectResult>(result.Result);
@@ -44,7 +44,7 @@ public class GetIntegrationTests
     }
 
     [Fact]
-    public void Get_ReadByIdWhenSomeItemAvailable_ReturnsOkAndItem()
+    public async Task Get_ReadByIdWhenSomeItemAvailable_ReturnsOkAndItem()
     {
         // Arrange
         var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
@@ -61,7 +61,7 @@ public class GetIntegrationTests
         context.SaveChanges();
 
         // Act
-        var result = controller.ReadById(toDoItem.ToDoItemId);
+        var result = await controller.ReadByIdAsync(toDoItem.ToDoItemId);
 
         // Assert
         var resultResult = Assert.IsType<OkObjectResult>(result.Result);
@@ -73,7 +73,7 @@ public class GetIntegrationTests
     }
 
     [Fact]
-    public void Get_ReadByIdWhenItemIsNull_ReturnsNotFound()
+    public async Task Get_ReadByIdWhenItemIsNull_ReturnsNotFound()
     {
         // Arrange
         var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
@@ -82,10 +82,10 @@ public class GetIntegrationTests
         int invalidId = -1;
 
         // Act
-        var result = controller.ReadById(invalidId);
+        var result = await controller.ReadByIdAsync(invalidId);
 
         // Assert
         Assert.IsType<NotFoundResult>(result.Result);
-        Assert.Null(repository.ReadById(invalidId));
+        Assert.Null(await repository.ReadByIdAsync(invalidId));
     }
 }

@@ -1,9 +1,10 @@
 namespace ToDoList.Persistence.Repositories;
 
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using ToDoList.Domain.Models;
 
-public class ToDoItemsRepository : IRepository<ToDoItem>
+public class ToDoItemsRepository : IRepositoryAsync<ToDoItem>
 {
     private readonly ToDoItemsContext context;
 
@@ -11,44 +12,45 @@ public class ToDoItemsRepository : IRepository<ToDoItem>
     {
         this.context = context;
     }
-    public void Create(ToDoItem item)
+
+    public async Task CreateAsync(ToDoItem item)
     {
-        context.ToDoItems.Add(item);
+        await context.ToDoItems.AddAsync(item);
         context.SaveChanges();
     }
 
-    public IEnumerable<ToDoItem> Read()
+    public async Task<IEnumerable<ToDoItem>> ReadAsync()
     {
-        return context.ToDoItems.ToList();
+        return await context.ToDoItems.ToListAsync();
     }
 
-    public ToDoItem ReadById(int toDoItemId)
+    public async Task<ToDoItem> ReadByIdAsync(int toDoItemId)
     {
-        return context.ToDoItems.Find(toDoItemId);
+        return await context.ToDoItems.FindAsync(toDoItemId);
     }
 
-    public bool UpdateById(ToDoItem updatedItem)
+    public async Task<bool> UpdateByIdAsync(ToDoItem updatedItem)
     {
-        var itemToUpdateInDb = context.ToDoItems.Find(updatedItem.ToDoItemId);
+        var itemToUpdateInDb = await context.ToDoItems.FindAsync(updatedItem.ToDoItemId);
         if (itemToUpdateInDb == null)
         {
             return false;
         }
         context.Entry(itemToUpdateInDb).CurrentValues.SetValues(updatedItem);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
         return true;
     }
 
-    public bool DeleteById(int toDoItemId)
+    public async Task<bool> DeleteByIdAsync(int toDoItemId)
     {
-        var itemToDeleteInDb = context.ToDoItems.Find(toDoItemId);
+        var itemToDeleteInDb = await context.ToDoItems.FindAsync(toDoItemId);
         if (itemToDeleteInDb == null)
         {
             return false;
         }
 
         context.ToDoItems.Remove(itemToDeleteInDb);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
         return true;
     }
 }

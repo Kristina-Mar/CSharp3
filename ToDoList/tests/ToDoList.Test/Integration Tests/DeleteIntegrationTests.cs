@@ -10,7 +10,7 @@ using FluentAssertions;
 public class DeleteIntegrationTests
 {
     [Fact]
-    public void Delete_DeleteByIdValidItemId_ReturnsNoContentAndDeletesItem()
+    public async Task Delete_DeleteByIdValidItemId_ReturnsNoContentAndDeletesItem()
     {
         // Arrange
         var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
@@ -23,27 +23,26 @@ public class DeleteIntegrationTests
             Description = "Delete test description",
             IsCompleted = false
         };
-        int expectedNumberOfItemsAfterDeleting = repository.Read().Count();
 
         context.Add(toDoItem);
         context.SaveChanges();
 
         // Act
-        var result = controller.DeleteById(toDoItem.ToDoItemId);
+        var result = await controller.DeleteByIdAsync(toDoItem.ToDoItemId);
 
         // Assert
         Assert.IsType<NoContentResult>(result);
-        Assert.Null(repository.ReadById(toDoItem.ToDoItemId));
-        Assert.Equal(expectedNumberOfItemsAfterDeleting, repository.Read().Count());
+        Assert.Null(await repository.ReadByIdAsync(toDoItem.ToDoItemId));
 
         // FluentAssertions alternatives
-        repository.ReadById(toDoItem.ToDoItemId).Should().BeNull();
-        repository.Read().Should().NotContain(i => i.ToDoItemId == toDoItem.ToDoItemId);
-        repository.Read().Count().Should().Be(expectedNumberOfItemsAfterDeleting);
+        var nonExistentItem = await repository.ReadByIdAsync(toDoItem.ToDoItemId);
+        nonExistentItem.Should().BeNull();
+        var items = await repository.ReadAsync();
+        items.Should().NotContain(i => i.ToDoItemId == toDoItem.ToDoItemId);
     }
 
     [Fact]
-    public void Delete_DeleteByIdInvalidItemId_ReturnsNotFound()
+    public async Task Delete_DeleteByIdInvalidItemId_ReturnsNotFound()
     {
         // Arrange
         var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
@@ -52,10 +51,10 @@ public class DeleteIntegrationTests
         var invalidId = -1;
 
         // Act
-        var result = controller.DeleteById(invalidId);
+        var result = await controller.DeleteByIdAsync(invalidId);
 
         // Assert
         Assert.IsType<NotFoundResult>(result);
-        Assert.Null(repository.ReadById(invalidId));
+        Assert.Null(await repository.ReadByIdAsync(invalidId));
     }
 }

@@ -11,7 +11,7 @@ using ToDoList.WebApi.Controllers;
 public class PutIntegrationTests
 {
     [Fact]
-    public void Put_UpdateByIdWhenItemUpdated_ReturnsNoContentAndUpdatesItem()
+    public async Task Put_UpdateByIdWhenItemUpdated_ReturnsNoContentAndUpdatesItem()
     {
         // Arrange
         var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
@@ -30,8 +30,8 @@ public class PutIntegrationTests
         var updatedItem = new ToDoItemUpdateRequestDto("Updated name", "Updated description", true);
 
         // Act
-        var result = controller.UpdateById(toDoItem.ToDoItemId, updatedItem);
-        var updatedItemInList = repository.ReadById(toDoItem.ToDoItemId);
+        var result = await controller.UpdateByIdAsync(toDoItem.ToDoItemId, updatedItem);
+        var updatedItemInList = await repository.ReadByIdAsync(toDoItem.ToDoItemId);
 
         // Assert
         Assert.IsType<NoContentResult>(result);
@@ -45,7 +45,7 @@ public class PutIntegrationTests
     }
 
     [Fact]
-    public void Put_UpdateByIdWhenIdNotFound_ReturnsNotFound()
+    public async Task Put_UpdateByIdWhenIdNotFound_ReturnsNotFound()
     {
         // Arrange
         var context = new ToDoItemsContext("Data Source=../../../../../data/localdb.db");
@@ -56,10 +56,10 @@ public class PutIntegrationTests
         var updatedItem = new ToDoItemUpdateRequestDto("Updated name", "Updated description", true);
 
         // Act
-        var result = controller.UpdateById(invalidId, updatedItem);
+        var result = await controller.UpdateByIdAsync(invalidId, updatedItem);
 
         // Assert
         Assert.IsType<NotFoundResult>(result);
-        Assert.Null(repository.ReadById(invalidId));
+        Assert.Null(await repository.ReadByIdAsync(invalidId));
     }
 }

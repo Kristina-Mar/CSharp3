@@ -6,17 +6,12 @@ using ToDoList.Persistence.Repositories;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ToDoItemsController : ControllerBase
+public class ToDoItemsController(IRepositoryAsync<ToDoItem> repositoryAsync) : ControllerBase
 {
-    private readonly IRepository<ToDoItem> repository;
-
-    public ToDoItemsController(IRepository<ToDoItem> repository)
-    {
-        this.repository = repository;
-    }
+    private readonly IRepositoryAsync<ToDoItem> repositoryAsync = repositoryAsync;
 
     [HttpPost]
-    public IActionResult Create(ToDoItemCreateRequestDto request)
+    public async Task<IActionResult> CreateAsync(ToDoItemCreateRequestDto request)
     {
         //map to Domain object as soon as possible
         var item = request.ToDomain();
@@ -24,7 +19,7 @@ public class ToDoItemsController : ControllerBase
         //try to create an item
         try
         {
-            repository.Create(item);
+            await repositoryAsync.CreateAsync(item);
         }
         catch (Exception ex)
         {
@@ -38,16 +33,16 @@ public class ToDoItemsController : ControllerBase
         Ukazala som to zle ja v breakout room, nedocitala som si cele zadanie, ale zaroven robila som to automaticky podla toho, co mame v praci a tam to mame zle ako pozeram :D
         Aspon je vidiet, ze ani moji seniorni kolegovia, co uz pracuju v IT roky, nevedia vzdy vsetko :)
         */
-        return CreatedAtAction(nameof(ReadById), new { toDoItemId = item.ToDoItemId }, ToDoItemGetResponseDto.FromDomain(item)); //201
+        return CreatedAtAction(nameof(ReadByIdAsync), new { toDoItemId = item.ToDoItemId }, ToDoItemGetResponseDto.FromDomain(item)); //201
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<ToDoItemGetResponseDto>> Read()
+    public async Task<ActionResult<IEnumerable<ToDoItemGetResponseDto>>> ReadAsync()
     {
         IEnumerable<ToDoItem> allItems = [];
         try
         {
-            allItems = repository.Read();
+            allItems = await repositoryAsync.ReadAsync();
         }
         catch (Exception ex)
         {
@@ -58,14 +53,14 @@ public class ToDoItemsController : ControllerBase
     }
 
     [HttpGet("{toDoItemId:int}")]
-    public ActionResult<ToDoItemGetResponseDto> ReadById(int toDoItemId)
+    public async Task<ActionResult<ToDoItemGetResponseDto>> ReadByIdAsync(int toDoItemId)
     {
         // Editor mi podciarkuje Find s chybou: Converting null literal or possible null value to non-nullable type.
         // robim teda z item nullable typ.
         ToDoItem? requestedItem;
         try
         {
-            requestedItem = repository.ReadById(toDoItemId);
+            requestedItem = await repositoryAsync.ReadByIdAsync(toDoItemId);
         }
         catch (Exception ex)
         {
@@ -76,7 +71,7 @@ public class ToDoItemsController : ControllerBase
     }
 
     [HttpPut("{toDoItemId:int}")]
-    public IActionResult UpdateById(int toDoItemId, [FromBody] ToDoItemUpdateRequestDto request)
+    public async Task<IActionResult> UpdateByIdAsync(int toDoItemId, [FromBody] ToDoItemUpdateRequestDto request)
     {
         var updatedItem = request.ToDomain();
         updatedItem.ToDoItemId = toDoItemId;
@@ -84,7 +79,7 @@ public class ToDoItemsController : ControllerBase
 
         try
         {
-            isUpdated = repository.UpdateById(updatedItem);
+            isUpdated = await repositoryAsync.UpdateByIdAsync(updatedItem);
         }
         catch (Exception ex)
         {
@@ -95,13 +90,13 @@ public class ToDoItemsController : ControllerBase
     }
 
     [HttpDelete("{toDoItemId:int}")]
-    public ActionResult DeleteById(int toDoItemId)
+    public async Task<ActionResult> DeleteByIdAsync(int toDoItemId)
     {
         bool isDeleted;
 
         try
         {
-            isDeleted = repository.DeleteById(toDoItemId);
+            isDeleted = await repositoryAsync.DeleteByIdAsync(toDoItemId);
         }
         catch (Exception ex)
         {

@@ -11,10 +11,10 @@ using FluentAssertions;
 public class PostUnitTests
 {
     [Fact]
-    public void Post_CreateValidRequest_ReturnsCreatedAtAction()
+    public async Task Post_CreateValidRequest_ReturnsCreatedAtAction()
     {
         // Arrange
-        var repositoryMock = Substitute.For<IRepository<ToDoItem>>();
+        var repositoryMock = Substitute.For<IRepositoryAsync<ToDoItem>>();
         var controller = new ToDoItemsController(repositoryMock);
 
         var toDoItemRequestDto = new ToDoItemCreateRequestDto("New item name", "New item description", false);
@@ -27,14 +27,14 @@ public class PostUnitTests
             IsCompleted = false
         };
 
-        repositoryMock.When(r => r.Create(Arg.Any<ToDoItem>())).Do(callInfo =>
+        repositoryMock.When(r => r.CreateAsync(Arg.Any<ToDoItem>())).Do(callInfo =>
         {
             var item = callInfo.Arg<ToDoItem>();
             item.ToDoItemId = 1;
         });
 
         // Act
-        var result = controller.Create(toDoItemRequestDto);
+        var result = await controller.CreateAsync(toDoItemRequestDto);
 
         // Assert
         var resultResult = Assert.IsType<CreatedAtActionResult>(result).Value;
@@ -44,28 +44,28 @@ public class PostUnitTests
         Assert.Equal(toDoItemReturnedDtoExpected.Name, newItem.Name);
         Assert.Equal(toDoItemReturnedDtoExpected.Description, newItem.Description);
         Assert.Equal(toDoItemReturnedDtoExpected.IsCompleted, newItem.IsCompleted);
-        repositoryMock.Received(1).Create(Arg.Any<ToDoItem>());
+        await repositoryMock.Received(1).CreateAsync(Arg.Any<ToDoItem>());
 
         // FluentAssertions alternative
         toDoItemReturnedDtoExpected.ToDoItemId.Should().Be(newItem.ToDoItemId);
     }
 
     [Fact]
-    public void Post_CreateUnhandledException_ReturnsInternalServerError()
+    public async Task Post_CreateUnhandledException_ReturnsInternalServerError()
     {
         // Arrange
-        var repositoryMock = Substitute.For<IRepository<ToDoItem>>();
+        var repositoryMock = Substitute.For<IRepositoryAsync<ToDoItem>>();
         var controller = new ToDoItemsController(repositoryMock);
         var toDoItemDto = new ToDoItemCreateRequestDto("New item name", "New item description", false);
 
-        repositoryMock.When(r => r.Create(Arg.Any<ToDoItem>())).Throws(new Exception());
+        repositoryMock.When(r => r.CreateAsync(Arg.Any<ToDoItem>())).Throws(new Exception());
 
         // Act
-        var result = controller.Create(toDoItemDto);
+        var result = await controller.CreateAsync(toDoItemDto);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
         Assert.Equal(StatusCodes.Status500InternalServerError, objectResult.StatusCode);
-        repositoryMock.Received(1).Create(Arg.Any<ToDoItem>());
+        await repositoryMock.Received(1).CreateAsync(Arg.Any<ToDoItem>());
     }
 }
