@@ -24,6 +24,7 @@ public class GetUnitTests
         {
             ToDoItemId = 1,
             Name = "Test name",
+            Category = "Work",
             Description = "Test description",
             IsCompleted = false
         };
@@ -31,6 +32,7 @@ public class GetUnitTests
         {
             ToDoItemId = 2,
             Name = "Test name",
+            Category = null,
             Description = "Test description",
             IsCompleted = true
         };
@@ -41,6 +43,7 @@ public class GetUnitTests
         {
             ToDoItemId = 1,
             Name = "Test name",
+            Category = "Work",
             Description = "Test description",
             IsCompleted = false
         };
@@ -48,6 +51,7 @@ public class GetUnitTests
         {
             ToDoItemId = 2,
             Name = "Test name",
+            Category = null,
             Description = "Test description",
             IsCompleted = true
         };
@@ -116,6 +120,7 @@ public class GetUnitTests
         {
             ToDoItemId = 1,
             Name = "Test name",
+            Category = "Test category",
             Description = "Test description",
             IsCompleted = false
         };
@@ -124,6 +129,7 @@ public class GetUnitTests
         {
             ToDoItemId = 1,
             Name = "Test name",
+            Category = "Test category",
             Description = "Test description",
             IsCompleted = false
         };

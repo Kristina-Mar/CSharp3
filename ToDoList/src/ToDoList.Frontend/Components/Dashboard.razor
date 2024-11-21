@@ -26,7 +26,7 @@
   text-decoration: underline;
   cursor: pointer;
   font-size: 16px;" @onclick="OrderItemsById">Id</button>▾</th>
-            <th style="width:35%"><button style="background: none;
+            <th style="width:25%"><button style="background: none;
   border: none;
   padding: 0;
   font: inherit;
@@ -34,12 +34,13 @@
   text-decoration: underline;
   cursor: pointer;
   font-size: 16px;" @onclick="OrderItemsByName">Name</button>▾</th>
-            <th style="width:45%">Description</th>
+            <th style="width:15%">Category</th>
+            <th style="width:40%">Description</th>
             <th style="width:10%">Completed?</th>
         </tr>
     </thead>
 
-    @if (toDoItems != null)
+    @if (toDoItems == null)
     {
         <p>Načítám...</p>
     }
@@ -51,6 +52,7 @@
         <tr>
            <td>@toDoItem.ToDoItemId</td>
            <td>@toDoItem.Name</td>
+           <td>@toDoItem.Category</td>
            <td>@toDoItem.Description</td>
            <td>@(toDoItem.IsCompleted ? "Yes" : "No")</td>
         </tr>

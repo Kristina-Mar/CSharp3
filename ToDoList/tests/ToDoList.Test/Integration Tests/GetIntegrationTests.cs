@@ -21,6 +21,7 @@ public class GetIntegrationTests
         var toDoItem = new ToDoItem()
         {
             Name = "Get test name",
+            Category = "Get test category",
             Description = "Get test description",
             IsCompleted = false
         };
@@ -39,6 +40,7 @@ public class GetIntegrationTests
         var newItem = value.First(i => i.ToDoItemId == toDoItem.ToDoItemId);
         Assert.NotNull(newItem);
         Assert.Equal(toDoItem.Name, newItem.Name);
+        Assert.Equal(toDoItem.Category, newItem.Category);
         Assert.Equal(toDoItem.Description, newItem.Description);
         Assert.Equal(toDoItem.IsCompleted, newItem.IsCompleted);
     }
@@ -54,6 +56,7 @@ public class GetIntegrationTests
         var toDoItem = new ToDoItem()
         {
             Name = "Get test name",
+            Category = "Get test category",
             Description = "Get test description",
             IsCompleted = false
         };
@@ -68,6 +71,7 @@ public class GetIntegrationTests
         var value = resultResult.Value as ToDoItemGetResponseDto;
         Assert.NotNull(value);
         Assert.Equal(toDoItem.Name, value.Name);
+        Assert.Equal(toDoItem.Category, value.Category);
         Assert.Equal(toDoItem.Description, value.Description);
         Assert.Equal(toDoItem.IsCompleted, value.IsCompleted);
     }

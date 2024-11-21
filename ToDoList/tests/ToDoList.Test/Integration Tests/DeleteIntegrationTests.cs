@@ -20,6 +20,7 @@ public class DeleteIntegrationTests
         var toDoItem = new ToDoItem()
         {
             Name = "Delete test name",
+            Category = "Delete test category",
             Description = "Delete test description",
             IsCompleted = false
         };

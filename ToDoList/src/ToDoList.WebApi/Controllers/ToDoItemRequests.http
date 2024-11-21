@@ -9,7 +9,7 @@ GET {{host}}:{{port}}/api/ToDoItems
 ###
 
 //Get specific ToDoItem by id
-@itemToGetId = 14
+@itemToGetId = 16
 GET {{host}}:{{port}}/api/ToDoItems/{{itemToGetId}}
 
 ###
@@ -20,6 +20,7 @@ Content-Type: application/json
 
 {
   "name": "Example New Task",
+  "category": "Work",
   "description": "Example New Description",
   "isCompleted": false
 }
@@ -27,13 +28,14 @@ Content-Type: application/json
 ###
 
 //Update existing ToDoItem by id
-@itemToUpdateId = 16
+@itemToUpdateId = 82
 
 PUT {{host}}:{{port}}/api/ToDoItems/{{itemToUpdateId}}
 Content-Type: application/json
 
 {
   "name": "Updated Task",
+  "category": "Updated category",
   "description": "Updated Description",
   "isCompleted": false
 }
@@ -41,5 +43,5 @@ Content-Type: application/json
 ###
 
 //Delete exisiting ToDoItem by id
-@itemToDeleteId = 12
+@itemToDeleteId = 36
 DELETE {{host}}:{{port}}/api/ToDoItems/{{itemToDeleteId}}

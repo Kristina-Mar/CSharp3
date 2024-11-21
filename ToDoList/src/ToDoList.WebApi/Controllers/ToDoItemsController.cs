@@ -53,6 +53,7 @@ public class ToDoItemsController(IRepositoryAsync<ToDoItem> repositoryAsync) : C
     }
 
     [HttpGet("{toDoItemId:int}")]
+    [ActionName(nameof(ReadByIdAsync))]
     public async Task<ActionResult<ToDoItemGetResponseDto>> ReadByIdAsync(int toDoItemId)
     {
         // Editor mi podciarkuje Find s chybou: Converting null literal or possible null value to non-nullable type.

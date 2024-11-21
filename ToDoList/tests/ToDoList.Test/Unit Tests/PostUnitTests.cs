@@ -17,12 +17,13 @@ public class PostUnitTests
         var repositoryMock = Substitute.For<IRepositoryAsync<ToDoItem>>();
         var controller = new ToDoItemsController(repositoryMock);
 
-        var toDoItemRequestDto = new ToDoItemCreateRequestDto("New item name", "New item description", false);
+        var toDoItemRequestDto = new ToDoItemCreateRequestDto("New item name", "Some category", "New item description", false);
 
         var toDoItemReturnedDtoExpected = new ToDoItemGetResponseDto
         {
             ToDoItemId = 1,
             Name = "New item name",
+            Category = "Some category",
             Description = "New item description",
             IsCompleted = false
         };
@@ -42,6 +43,7 @@ public class PostUnitTests
 
         Assert.Equal(toDoItemReturnedDtoExpected.ToDoItemId, newItem.ToDoItemId);
         Assert.Equal(toDoItemReturnedDtoExpected.Name, newItem.Name);
+        Assert.Equal(toDoItemReturnedDtoExpected.Category, newItem.Category);
         Assert.Equal(toDoItemReturnedDtoExpected.Description, newItem.Description);
         Assert.Equal(toDoItemReturnedDtoExpected.IsCompleted, newItem.IsCompleted);
         await repositoryMock.Received(1).CreateAsync(Arg.Any<ToDoItem>());
@@ -56,7 +58,7 @@ public class PostUnitTests
         // Arrange
         var repositoryMock = Substitute.For<IRepositoryAsync<ToDoItem>>();
         var controller = new ToDoItemsController(repositoryMock);
-        var toDoItemDto = new ToDoItemCreateRequestDto("New item name", "New item description", false);
+        var toDoItemDto = new ToDoItemCreateRequestDto("New item name", "Some category", "New item description", false);
 
         repositoryMock.When(r => r.CreateAsync(Arg.Any<ToDoItem>())).Throws(new Exception());
 
