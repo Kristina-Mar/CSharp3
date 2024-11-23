@@ -19,14 +19,14 @@ public class PutUnitTests
 
         var updatedItem = new ToDoItemUpdateRequestDto("Updated name", "Updated category", "Updated description", true);
 
-        repositoryMock.UpdateByIdAsync(Arg.Any<ToDoItem>()).Returns(true);
+        repositoryMock.IsUpdatedByIdAsync(Arg.Any<ToDoItem>()).Returns(true);
 
         // Act
         var result = await controller.UpdateByIdAsync(1, updatedItem);
 
         // Assert
         Assert.IsType<NoContentResult>(result);
-        await repositoryMock.Received(1).UpdateByIdAsync(Arg.Any<ToDoItem>());
+        await repositoryMock.Received(1).IsUpdatedByIdAsync(Arg.Any<ToDoItem>());
     }
 
     [Fact]
@@ -38,14 +38,14 @@ public class PutUnitTests
 
         var updatedItem = new ToDoItemUpdateRequestDto("Updated name", "Updated category", "Updated description", true);
 
-        repositoryMock.UpdateByIdAsync(Arg.Any<ToDoItem>()).Returns(false);
+        repositoryMock.IsUpdatedByIdAsync(Arg.Any<ToDoItem>()).Returns(false);
 
         // Act
         var result = await controller.UpdateByIdAsync(2, updatedItem);
 
         // Assert
         Assert.IsType<NotFoundResult>(result);
-        await repositoryMock.Received(1).UpdateByIdAsync(Arg.Any<ToDoItem>());
+        await repositoryMock.Received(1).IsUpdatedByIdAsync(Arg.Any<ToDoItem>());
     }
 
     [Fact]
@@ -57,7 +57,7 @@ public class PutUnitTests
 
         var updatedItem = new ToDoItemUpdateRequestDto("Updated name", "Updated category", "Updated description", true);
 
-        repositoryMock.When(r => r.UpdateByIdAsync(Arg.Any<ToDoItem>())).Do(r => throw new Exception());
+        repositoryMock.When(r => r.IsUpdatedByIdAsync(Arg.Any<ToDoItem>())).Do(r => throw new Exception());
 
         // Act
         var result = await controller.UpdateByIdAsync(1, updatedItem);
@@ -65,6 +65,6 @@ public class PutUnitTests
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
         Assert.Equal(StatusCodes.Status500InternalServerError, objectResult.StatusCode);
-        await repositoryMock.Received(1).UpdateByIdAsync(Arg.Any<ToDoItem>());
+        await repositoryMock.Received(1).IsUpdatedByIdAsync(Arg.Any<ToDoItem>());
     }
 }

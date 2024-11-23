@@ -80,7 +80,7 @@ public class ToDoItemsController(IRepositoryAsync<ToDoItem> repositoryAsync) : C
 
         try
         {
-            isUpdated = await repositoryAsync.UpdateByIdAsync(updatedItem);
+            isUpdated = await repositoryAsync.IsUpdatedByIdAsync(updatedItem);
         }
         catch (Exception ex)
         {
@@ -97,7 +97,7 @@ public class ToDoItemsController(IRepositoryAsync<ToDoItem> repositoryAsync) : C
 
         try
         {
-            isDeleted = await repositoryAsync.DeleteByIdAsync(toDoItemId);
+            isDeleted = await repositoryAsync.IsDeletedByIdAsync(toDoItemId);
         }
         catch (Exception ex)
         {

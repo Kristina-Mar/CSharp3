@@ -29,7 +29,7 @@ public class ToDoItemsRepository : IRepositoryAsync<ToDoItem>
         return await context.ToDoItems.FindAsync(toDoItemId);
     }
 
-    public async Task<bool> UpdateByIdAsync(ToDoItem updatedItem)
+    public async Task<bool> IsUpdatedByIdAsync(ToDoItem updatedItem)
     {
         var itemToUpdateInDb = await context.ToDoItems.FindAsync(updatedItem.ToDoItemId);
         if (itemToUpdateInDb == null)
@@ -41,7 +41,7 @@ public class ToDoItemsRepository : IRepositoryAsync<ToDoItem>
         return true;
     }
 
-    public async Task<bool> DeleteByIdAsync(int toDoItemId)
+    public async Task<bool> IsDeletedByIdAsync(int toDoItemId)
     {
         var itemToDeleteInDb = await context.ToDoItems.FindAsync(toDoItemId);
         if (itemToDeleteInDb == null)
