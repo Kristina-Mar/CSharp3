@@ -14,6 +14,6 @@ public interface IRepositoryAsync<T> where T : class
     public Task CreateAsync(T item);
     public Task<T?> ReadByIdAsync(int toDoItemId);
     public Task<IEnumerable<T>> ReadAsync();
-    public Task<bool> IsUpdatedByIdAsync(T updatedItem);
-    public Task<bool> IsDeletedByIdAsync(int toDoItemId);
+    public Task UpdateByIdAsync(T updatedItem);
+    public Task DeleteByIdAsync(int toDoItemId);
 }

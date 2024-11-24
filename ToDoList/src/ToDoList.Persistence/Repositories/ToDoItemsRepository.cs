@@ -19,38 +19,21 @@ public class ToDoItemsRepository : IRepositoryAsync<ToDoItem>
         context.SaveChanges();
     }
 
-    public async Task<IEnumerable<ToDoItem>> ReadAsync()
-    {
-        return await context.ToDoItems.ToListAsync();
-    }
+    public async Task<IEnumerable<ToDoItem>> ReadAsync() => await context.ToDoItems.ToListAsync();
 
-    public async Task<ToDoItem> ReadByIdAsync(int toDoItemId)
-    {
-        return await context.ToDoItems.FindAsync(toDoItemId);
-    }
+    public async Task<ToDoItem> ReadByIdAsync(int toDoItemId) => await context.ToDoItems.FindAsync(toDoItemId);
 
-    public async Task<bool> IsUpdatedByIdAsync(ToDoItem updatedItem)
+    public async Task UpdateByIdAsync(ToDoItem updatedItem)
     {
-        var itemToUpdateInDb = await context.ToDoItems.FindAsync(updatedItem.ToDoItemId);
-        if (itemToUpdateInDb == null)
-        {
-            return false;
-        }
+        var itemToUpdateInDb = await context.ToDoItems.FindAsync(updatedItem.ToDoItemId) ?? throw new KeyNotFoundException();
         context.Entry(itemToUpdateInDb).CurrentValues.SetValues(updatedItem);
         await context.SaveChangesAsync();
-        return true;
     }
 
-    public async Task<bool> IsDeletedByIdAsync(int toDoItemId)
+    public async Task DeleteByIdAsync(int toDoItemId)
     {
-        var itemToDeleteInDb = await context.ToDoItems.FindAsync(toDoItemId);
-        if (itemToDeleteInDb == null)
-        {
-            return false;
-        }
-
+        var itemToDeleteInDb = await context.ToDoItems.FindAsync(toDoItemId) ?? throw new KeyNotFoundException();
         context.ToDoItems.Remove(itemToDeleteInDb);
         await context.SaveChangesAsync();
-        return true;
     }
 }

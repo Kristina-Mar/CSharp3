@@ -17,14 +17,14 @@ public class DeleteUnitTests
         var repositoryMock = Substitute.For<IRepositoryAsync<ToDoItem>>();
         var controller = new ToDoItemsController(repositoryMock);
 
-        repositoryMock.IsDeletedByIdAsync(Arg.Any<int>()).Returns(true);
+        repositoryMock.DeleteByIdAsync(Arg.Any<int>()).Returns(true);
 
         // Act
         var result = await controller.DeleteByIdAsync(1);
 
         // Assert
         Assert.IsType<NoContentResult>(result);
-        await repositoryMock.Received(1).IsDeletedByIdAsync(Arg.Any<int>());
+        await repositoryMock.Received(1).DeleteByIdAsync(Arg.Any<int>());
 
         result.Should().BeOfType<NoContentResult>(); // FluentAssertions alternative
     }
@@ -36,14 +36,14 @@ public class DeleteUnitTests
         var repositoryMock = Substitute.For<IRepositoryAsync<ToDoItem>>();
         var controller = new ToDoItemsController(repositoryMock);
 
-        repositoryMock.IsDeletedByIdAsync(Arg.Any<int>()).Returns(false);
+        repositoryMock.DeleteByIdAsync(Arg.Any<int>()).Returns(false);
 
         // Act
         var result = await controller.DeleteByIdAsync(-1);
 
         // Assert
         Assert.IsType<NotFoundResult>(result);
-        await repositoryMock.Received(1).IsDeletedByIdAsync(Arg.Any<int>());
+        await repositoryMock.Received(1).DeleteByIdAsync(Arg.Any<int>());
 
         result.Should().BeOfType<NotFoundResult>(); // FluentAssertions alternative
     }
@@ -55,7 +55,7 @@ public class DeleteUnitTests
         var repositoryMock = Substitute.For<IRepositoryAsync<ToDoItem>>();
         var controller = new ToDoItemsController(repositoryMock);
 
-        repositoryMock.When(r => r.IsDeletedByIdAsync(Arg.Any<int>())).Throws(new Exception());
+        repositoryMock.When(r => r.DeleteByIdAsync(Arg.Any<int>())).Throws(new Exception());
 
         // Act
         var result = await controller.DeleteByIdAsync(1);
@@ -63,7 +63,7 @@ public class DeleteUnitTests
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
         Assert.Equal(StatusCodes.Status500InternalServerError, objectResult.StatusCode);
-        await repositoryMock.Received(1).IsDeletedByIdAsync(Arg.Any<int>());
+        await repositoryMock.Received(1).DeleteByIdAsync(Arg.Any<int>());
 
         result.Should().BeOfType<ObjectResult>().Which.StatusCode.Should().Be(500); // FluentAssertions alternative
     }

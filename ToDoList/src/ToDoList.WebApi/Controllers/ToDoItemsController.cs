@@ -76,34 +76,39 @@ public class ToDoItemsController(IRepositoryAsync<ToDoItem> repositoryAsync) : C
     {
         var updatedItem = request.ToDomain();
         updatedItem.ToDoItemId = toDoItemId;
-        bool isUpdated;
 
         try
         {
-            isUpdated = await repositoryAsync.IsUpdatedByIdAsync(updatedItem);
+            await repositoryAsync.UpdateByIdAsync(updatedItem);
         }
         catch (Exception ex)
         {
+            if (ex is KeyNotFoundException)
+            {
+                return NotFound();
+            }
             return Problem(ex.Message, null, StatusCodes.Status500InternalServerError);
         }
 
-        return isUpdated ? NoContent() : NotFound();
+        return NoContent();
     }
 
     [HttpDelete("{toDoItemId:int}")]
     public async Task<ActionResult> DeleteByIdAsync(int toDoItemId)
     {
-        bool isDeleted;
-
         try
         {
-            isDeleted = await repositoryAsync.IsDeletedByIdAsync(toDoItemId);
+            await repositoryAsync.DeleteByIdAsync(toDoItemId);
         }
         catch (Exception ex)
         {
+            if (ex is KeyNotFoundException)
+            {
+                return NotFound();
+            }
             return Problem(ex.Message, null, StatusCodes.Status500InternalServerError);
         }
 
-        return isDeleted ? NoContent() : NotFound();
+        return NoContent();
     }
 }
