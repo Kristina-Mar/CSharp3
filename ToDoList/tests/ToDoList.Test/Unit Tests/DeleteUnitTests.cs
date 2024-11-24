@@ -7,6 +7,7 @@ using FluentAssertions;
 using ToDoList.Domain.Models;
 using ToDoList.Persistence.Repositories;
 using ToDoList.WebApi.Controllers;
+using NSubstitute.ExceptionExtensions;
 
 public class DeleteUnitTests
 {
@@ -17,7 +18,7 @@ public class DeleteUnitTests
         var repositoryMock = Substitute.For<IRepositoryAsync<ToDoItem>>();
         var controller = new ToDoItemsController(repositoryMock);
 
-        repositoryMock.DeleteByIdAsync(Arg.Any<int>()).Returns(true);
+        repositoryMock.DeleteByIdAsync(Arg.Any<int>()).Returns(Task.CompletedTask);
 
         // Act
         var result = await controller.DeleteByIdAsync(1);
@@ -36,7 +37,7 @@ public class DeleteUnitTests
         var repositoryMock = Substitute.For<IRepositoryAsync<ToDoItem>>();
         var controller = new ToDoItemsController(repositoryMock);
 
-        repositoryMock.DeleteByIdAsync(Arg.Any<int>()).Returns(false);
+        repositoryMock.DeleteByIdAsync(Arg.Any<int>()).Throws(new KeyNotFoundException());
 
         // Act
         var result = await controller.DeleteByIdAsync(-1);

@@ -3,6 +3,7 @@ namespace ToDoList.Test;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using ToDoList.Domain.DTOs;
 using ToDoList.Domain.Models;
 using ToDoList.Persistence.Repositories;
@@ -19,7 +20,7 @@ public class PutUnitTests
 
         var updatedItem = new ToDoItemUpdateRequestDto("Updated name", "Updated category", "Updated description", true);
 
-        repositoryMock.UpdateByIdAsync(Arg.Any<ToDoItem>()).Returns(true);
+        repositoryMock.UpdateByIdAsync(Arg.Any<ToDoItem>()).Returns(Task.CompletedTask);
 
         // Act
         var result = await controller.UpdateByIdAsync(1, updatedItem);
@@ -38,7 +39,7 @@ public class PutUnitTests
 
         var updatedItem = new ToDoItemUpdateRequestDto("Updated name", "Updated category", "Updated description", true);
 
-        repositoryMock.UpdateByIdAsync(Arg.Any<ToDoItem>()).Returns(false);
+        repositoryMock.UpdateByIdAsync(Arg.Any<ToDoItem>()).Throws(new KeyNotFoundException());
 
         // Act
         var result = await controller.UpdateByIdAsync(2, updatedItem);
