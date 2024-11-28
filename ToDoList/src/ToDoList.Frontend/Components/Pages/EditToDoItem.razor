@@ -10,15 +10,27 @@
 <div class="container mt-4">
 @if (ToDoItem is not null)
 {
-    <EditForm Model="ToDoItem" FormName="EditToDoItem" OnSubmit="Submit">
-        <label style="margin-right: 10px;">Name:</label><InputText id="Name" @bind-Value="ToDoItem.Name"/>
-        <label>Category:</label><InputText id="Category" @bind-Value="ToDoItem.Category"/>
-        <label>Description:</label><InputText id="Description" @bind-Value="ToDoItem.Description"/>
-        <label>Is completed? </label><InputCheckbox id="IsCompleted" @bind-Value="ToDoItem.IsCompleted"/>
-        <button type="submit">Submit</button>
+    <EditForm Model="ToDoItem" FormName="EditToDoItem" OnSubmit="Submit" class="row g-3">
+        <div class="col-md-6">
+            <label class="form-label">Name:</label><InputText id="Name" @bind-Value="ToDoItem.Name" class="form-control"/>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Category:</label><InputText id="Category" @bind-Value="ToDoItem.Category" class="form-control"/>
+        </div>
+        <div class="col-md-12">
+            <label class="form-label">Description:</label><InputText id="Description" @bind-Value="ToDoItem.Description" class="form-control"/>
+        </div>
+        <div class="col-md-12">
+        <div class="form-check">
+            <label class="form-check-label">Is completed? </label><InputCheckbox id="IsCompleted" @bind-Value="ToDoItem.IsCompleted" class="form-check-input"/>
+        </div>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-success">Submit</button>
+            <button type="button" class="btn btn-danger" @onclick="Return">Cancel</button>
+        </div>
     </EditForm>
 
-<button @onclick="Return">Cancel</button>
 }
 </div>
 

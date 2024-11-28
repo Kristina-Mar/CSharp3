@@ -29,7 +29,7 @@
     <tbody>
     @if (toDoItems == null)
     {
-        <p>Načítám...</p>
+        <p>Loading...</p>
     }
 
     @if (toDoItems != null)
@@ -42,7 +42,11 @@
            <td>@toDoItem.Category</td>
            <td>@toDoItem.Description</td>
            <td>@(toDoItem.IsCompleted ? "Yes" : "No")</td>
-           <td><button class="btn btn-success" @onclick="() => EditItem(toDoItem)">Edit</button></td>
+           <td>
+            <i class=@SetIconBasedOnTaskCompletion(toDoItem) @onclick="() => ChangeTaskStatus(toDoItem)"></i>
+            <i class="bi bi-pencil-square" @onclick="() => EditItem(toDoItem)"></i>
+            <i class="bi bi-trash" @onclick="() => DeleteItem(toDoItem)"></i>
+           </td>
         </tr>
         }
     }
@@ -71,13 +75,39 @@
     {
         toDoItems = toDoItems?.OrderBy(i => i.ToDoItemId).ToList();
     }
+
     private void OrderItemsByName()
     {
         toDoItems = toDoItems?.OrderBy(i => i.Name).ToList();
     }
 
+    public string SetIconBasedOnTaskCompletion(ToDoItemView item)
+    {
+        return item.IsCompleted ? "bi bi-check-circle" : "bi bi-circle";
+    }
+
+    public async Task ChangeTaskStatus(ToDoItemView item)
+    {
+        if (item.IsCompleted)
+        {
+            item.IsCompleted = false;
+            await ToDoItemsClient.UpdateByIdAsync(item);
+        }
+        else
+        {
+            item.IsCompleted = true;
+            await ToDoItemsClient.UpdateByIdAsync(item);
+        }
+    }
+
     public void EditItem(ToDoItemView item)
     {
         NavigationManager.NavigateTo($"editToDoItem/{item.ToDoItemId}");
+    }
+
+    public async Task DeleteItem(ToDoItemView item)
+    {
+        await ToDoItemsClient.DeleteByIdAsync(item);
+        await OnInitializedAsync();
     }
 }
