@@ -4,16 +4,6 @@
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
-<style>
-    th{
-        background-color: #228b22 ;
-        color: white;
-        font-family: Arial, Helvetica, sans-serif;
-        text-align: left; }
-    tr:nth-child(even) {
-  background-color: #ddf7dd;}
-</style>
-
 <h1>Dashboard</h1>
 
 <table class="table table-hover mt-5">
@@ -88,16 +78,8 @@
 
     public async Task ChangeTaskStatus(ToDoItemView item)
     {
-        if (item.IsCompleted)
-        {
-            item.IsCompleted = false;
-            await ToDoItemsClient.UpdateByIdAsync(item);
-        }
-        else
-        {
-            item.IsCompleted = true;
-            await ToDoItemsClient.UpdateByIdAsync(item);
-        }
+        item.IsCompleted = !item.IsCompleted;
+        await ToDoItemsClient.UpdateByIdAsync(item);
     }
 
     public void EditItem(ToDoItemView item)
