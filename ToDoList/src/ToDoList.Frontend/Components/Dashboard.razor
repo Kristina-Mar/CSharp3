@@ -35,10 +35,30 @@
            <td>
             <i class=@SetIconBasedOnTaskCompletion(toDoItem) @onclick="() => ChangeTaskStatus(toDoItem)"></i>
             <i class="bi bi-pencil-square" @onclick="() => EditItem(toDoItem)"></i>
-            <i class="bi bi-trash" @onclick="() => DeleteItem(toDoItem)"></i>
+            <i class="bi bi-trash" data-bs-toggle="modal" data-bs-target="#deleteWarningModal" @onclick="() => SetItemToDelete(toDoItem)"></i>
            </td>
         </tr>
         }
+            <div class="modal fade" id="deleteWarningModal" tabindex="-1"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header border-0">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Delete task?</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to delete task @ItemToDelete.ToDoItemId: @ItemToDelete.Name?</p>
+                        </div>
+                        <div class="modal-footer border-0">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="() => DeleteItem(ItemToDelete)">Yes,
+                                delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
     }
     </tbody>
 
@@ -49,6 +69,12 @@
 
 @code
 {
+    private ToDoItemView ItemToDelete = new ToDoItemView();
+
+    private void SetItemToDelete(ToDoItemView itemToDelete)
+    {
+        ItemToDelete = itemToDelete;
+    }
     protected override async Task OnInitializedAsync()
     {
         toDoItems = await ToDoItemsClient.ReadItemsAsync();
