@@ -64,12 +64,13 @@
 
 </table>
 <br>
+<button class="btn btn-success" @onclick="CreateItem">Create new task</button>
 <button class="btn btn-success" @onclick="OrderItemsById">Order by ID</button>
 <button class="btn btn-success" @onclick="OrderItemsByName">Order by name</button>
 
 @code
 {
-    private ToDoItemView ItemToDelete = new ToDoItemView() {Name = "name", Description = "description"};
+    private ToDoItemView ItemToDelete = new ToDoItemView() {Name = string.Empty, Description = string.Empty};
 
     private void SetItemToDelete(ToDoItemView itemToDelete)
     {
@@ -106,6 +107,11 @@
     {
         item.IsCompleted = !item.IsCompleted;
         await ToDoItemsClient.UpdateByIdAsync(item);
+    }
+
+    public void CreateItem()
+    {
+        NavigationManager.NavigateTo("createToDoItem");
     }
 
     public void EditItem(ToDoItemView item)

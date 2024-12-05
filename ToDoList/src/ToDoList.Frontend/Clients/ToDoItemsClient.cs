@@ -13,7 +13,8 @@ public class ToDoItemsClient(HttpClient httpClient) : IToDoItemsClient
 
             if (response.StatusCode == System.Net.HttpStatusCode.Created)
             {
-                Console.WriteLine("POST request successful: Created a ToDoItem.");
+                var newItem = await response.Content.ReadFromJsonAsync<ToDoItemGetResponseDto>();
+                Console.WriteLine($"POST request successful: Created a ToDoItem with Id {newItem.ToDoItemId}.");
                 return;
             }
             else

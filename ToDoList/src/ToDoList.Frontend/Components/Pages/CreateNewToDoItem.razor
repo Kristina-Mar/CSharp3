@@ -1,16 +1,14 @@
-﻿@page "/editToDoItem/{ItemId:int}"
+﻿@page "/createToDoItem"
 @using ToDoList.Frontend.Views
 @using ToDoList.Frontend.Clients
 @inject IToDoItemsClient ToDoItemsClient
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
-<PageTitle>Edit task</PageTitle>
+<PageTitle>Create new task</PageTitle>
 
 <div class="container mt-4">
-    @if (ToDoItem is not null)
-    {
-        <EditForm Model="ToDoItem" FormName="EditToDoItem" OnValidSubmit="Submit" class="row g-3">
+        <EditForm Model="ToDoItem" FormName="CreateToDoItem" OnValidSubmit="Submit" class="row g-3">
             <DataAnnotationsValidator />
             <div class="col-md-6">
                 <label class="form-label">Name:</label>
@@ -39,19 +37,15 @@
                 <button type="button" class="btn btn-danger" @onclick="Return">Cancel</button>
             </div>
         </EditForm>
-    }
 </div>
 
 @code
 {
     protected override async Task OnInitializedAsync()
     {
-        ToDoItem = await ToDoItemsClient.ReadByIdAsync(ItemId);
+        ToDoItem = new ToDoItemView() {Name = string.Empty, Description = string.Empty};
         SubmitDelegate = LogSubmit;
     }
-
-    [Parameter]
-    public int ItemId { get; set; }
 
     [SupplyParameterFromForm]
     public ToDoItemView ToDoItem { get; set; }
@@ -62,13 +56,13 @@
 
     private void LogSubmit(ToDoItemView toDoItem)
     {
-        Console.WriteLine($"Item with Id {toDoItem.ToDoItemId} was updated.");
+        Console.WriteLine($"New item was created.");
     }
 
     public async Task Submit()
     {
+        await ToDoItemsClient.CreateAsync(ToDoItem);
         SubmitDelegate?.Invoke(ToDoItem);
-        await ToDoItemsClient.UpdateByIdAsync(ToDoItem);
         NavigationManager.NavigateTo("/");
     }
 
