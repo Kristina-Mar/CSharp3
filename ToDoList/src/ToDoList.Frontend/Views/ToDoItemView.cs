@@ -5,8 +5,9 @@ public class ToDoItemView
 {
     public int ToDoItemId { get; set; }
     [Required(ErrorMessage = "Name is mandatory.")]
-    [Length(3, 50)]
+    [Length(1, 50)]
     public required string Name { get; set; }
+    [StringLength(50)]
     public string? Category { get; set; }
     [Required(ErrorMessage = "Description is mandatory.")]
     [StringLength(250)]
