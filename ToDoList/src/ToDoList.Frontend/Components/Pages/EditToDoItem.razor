@@ -8,30 +8,38 @@
 <PageTitle>Edit To Do Item</PageTitle>
 
 <div class="container mt-4">
-@if (ToDoItem is not null)
-{
-    <EditForm Model="ToDoItem" FormName="EditToDoItem" OnValidSubmit="Submit"> @*OnSubmit -> OnValidSubmit*@
-        <DataAnnotationsValidator />
-        <label for="Name" class="form-label">Name:</label>
-        <InputText id="Name" class="form-control" @bind-Value="ToDoItem.Name" />
-        <ValidationMessage For="() => ToDoItem.Name" />
-
-        <label for="Category" class="form-label">Category:</label>
-        <InputText id="Category" class="form-control" @bind-Value="ToDoItem.Category" />
-        <ValidationMessage For="() => ToDoItem.Category" />
-
-        <label for="Description" class="form-label">Description:</label>
-        <InputText id="Description" class="form-control" @bind-Value="ToDoItem.Description" />
-        <ValidationMessage For="() => ToDoItem.Description" />
-
-        <label for="IsCompleted" class="form-check-label">IsCompleted:</label>
-        <InputCheckbox id="IsCompleted" class="form-check" @bind-Value="ToDoItem.IsCompleted" />
-        <ValidationMessage For="() => ToDoItem.IsCompleted" />
-
-        <button type="submit">Submit</button>
-    </EditForm>
-
-}
+    @if (ToDoItem is not null)
+    {
+        <EditForm Model="ToDoItem" FormName="EditToDoItem" OnValidSubmit="Submit" class="row g-3">
+            <DataAnnotationsValidator />
+            <div class="col-md-6">
+                <label class="form-label">Name:</label>
+                <InputText id="Name" @bind-Value="ToDoItem.Name" class="form-control" />
+                <ValidationMessage For="() => ToDoItem.Name" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Category:</label>
+                <InputText id="Category" @bind-Value="ToDoItem.Category" class="form-control" />
+                <ValidationMessage For="() => ToDoItem.Category" />
+            </div>
+            <div class="col-md-12">
+                <label class="form-label">Description:</label>
+                <InputText id="Description" @bind-Value="ToDoItem.Description" class="form-control" />
+                <ValidationMessage For="() => ToDoItem.Description" />
+            </div>
+            <div class="col-md-12">
+                <div class="form-check">
+                    <label class="form-check-label">Is completed? </label>
+                    <InputCheckbox id="IsCompleted" @bind-Value="ToDoItem.IsCompleted" class="form-check-input" />
+                    <ValidationMessage For="() => ToDoItem.IsCompleted" />
+                </div>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-success">Submit</button>
+                <button type="button" class="btn btn-danger" @onclick="Return">Cancel</button>
+            </div>
+        </EditForm>
+    }
 </div>
 
 @code
